@@ -28,9 +28,9 @@ class ViewController: UIViewController {
         ])
         
         label.font = UIFont.Oswald.semiBold(size: 40)
-        label.textColor = .white
+        label.textColor = AppColors.textPrimary
         
-        view.backgroundColor = .lightGray
+        view.backgroundColor = AppColors.background
     }
 
 

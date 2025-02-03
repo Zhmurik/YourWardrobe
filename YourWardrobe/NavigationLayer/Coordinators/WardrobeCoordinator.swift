@@ -7,11 +7,11 @@
 
 import UIKit
 
-class WardrobeListCoordinator: Coordinator {
+class WardrobeCoordinator: Coordinator {
     
     override func start() {
         let vc = ViewController()
-        vc.view.backgroundColor = .blue
+        vc.view.backgroundColor = .green
         navigationController?.pushViewController(vc, animated: true)
     }
     
