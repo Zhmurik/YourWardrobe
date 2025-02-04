@@ -27,6 +27,7 @@ class OnboardingPartViewController: UIViewController {
             descriptionLabel.text = descriptionText
         }
     }
+    var buttonText: String?
     
     // MARK: - Views
     private let imageView = UIImageView()
@@ -92,4 +93,5 @@ private extension OnboardingPartViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -72)
         ])
     }
+    
 }
