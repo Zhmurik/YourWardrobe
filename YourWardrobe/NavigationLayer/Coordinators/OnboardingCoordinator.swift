@@ -22,15 +22,30 @@ private extension OnboardingCoordinator {
     func showOnboarding() {
         
         var pages = [UIViewController]()
-        let firstVC = UIViewController()
-        firstVC.view.backgroundColor = .purple
-        let secondVC = UIViewController()
-        secondVC.view.backgroundColor = .yellow
-        let thirdVC = UIViewController()
-        thirdVC.view.backgroundColor = .blue
+        let firstVC = OnboardingPartViewController()
+        firstVC.imageToShow = UIImage(resource: .wardrobeIcon)
+        firstVC.titleText = "Your Closet is online"
+        firstVC.descriptionText = "Always have access to your wardrobe"
+        
+        let secondVC = OnboardingPartViewController()
+        secondVC.imageToShow = UIImage(resource: .clothes)
+        secondVC.titleText = "Visual representation"
+        secondVC.descriptionText = "You know exactly what you have"
+        
+        let thirdVC = OnboardingPartViewController()
+        thirdVC.imageToShow = UIImage(resource: .mirror)
+        thirdVC.titleText = "Your image"
+        thirdVC.descriptionText = "Create and maintain versatile wardrobe"
+        
+        let fourthVC = OnboardingPartViewController()
+        fourthVC.imageToShow = UIImage(resource: .money)
+        fourthVC.titleText = "Safety first"
+        fourthVC.descriptionText = "Stick to a budget and invest in pieces that truly complement your wardrobe and personal style"
+        
         pages.append(firstVC)
         pages.append(secondVC)
         pages.append(thirdVC)
+        pages.append(fourthVC)
         
         let presenter = OnboardingViewPresenter(coordinator: self)
         let viewController = OnboardingViewController(pages: pages, viewOutput: presenter)

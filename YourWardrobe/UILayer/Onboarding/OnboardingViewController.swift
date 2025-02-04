@@ -72,18 +72,14 @@ private extension OnboardingViewController {
 extension OnboardingViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
-        guard let currentIndex = pages.firstIndex(of: viewController), currentIndex > 0 else {
-            return UIViewController()
-        }
+        guard let currentIndex = pages.firstIndex(of: viewController), currentIndex > 0 else { return nil }
         
         return pages[currentIndex - 1]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         
-        guard let currentIndex = pages.firstIndex(of: viewController), currentIndex < pages.count - 1 else {
-            return UIViewController()
-        }
+        guard let currentIndex = pages.firstIndex(of: viewController), currentIndex < pages.count - 1 else { return nil }
         
         return pages[currentIndex + 1]
     }
