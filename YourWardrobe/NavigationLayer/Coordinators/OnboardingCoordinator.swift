@@ -15,6 +15,7 @@ class OnboardingCoordinator: Coordinator {
     
     override func finish() {
         print("AppCoordinator finished")
+        finishDelegate?.coordinatorDidFinish(childCoordinator:  self)
     }
 }
 
@@ -22,6 +23,7 @@ private extension OnboardingCoordinator {
     func showOnboarding() {
         
         var pages = [OnboardingPartViewController]()
+        
         let firstVC = OnboardingPartViewController()
         firstVC.imageToShow = UIImage(resource: .wardrobeIcon)
         firstVC.titleText = "Your Closet is online"

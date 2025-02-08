@@ -1,24 +1,38 @@
 import UIKit
 
+import UIKit
+
 extension UIFont {
     enum Oswald {
-        static func bold(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.bold, size: size) ?? UIFont.systemFont(ofSize: size, weight: .bold)
+        enum Bold {
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.bold, size: size)!
+            }
         }
-        static func extraLight(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.extraLight, size: size) ?? UIFont.systemFont(ofSize: size, weight: .ultraLight)
+        enum ExtraLight {
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.extraLight, size: size)!
+            }
         }
-        static func light(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.light, size: size) ?? UIFont.systemFont(ofSize: size, weight: .light)
+        enum Light {
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.light, size: size)!
+            }
         }
-        static func medium(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.medium, size: size) ?? UIFont.systemFont(ofSize: size, weight: .medium)
+        enum Medium {
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.medium, size: size)!
+            }
         }
-        static func regular(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.regular, size: size) ?? UIFont.systemFont(ofSize: size, weight: .regular)
+        enum Regular {
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.regular, size: size)!
+            }
         }
-        static func semiBold(size: CGFloat) -> UIFont {
-            return UIFont(name: Constants.Oswald.semiBold, size: size) ?? UIFont.systemFont(ofSize: size, weight: .semibold)
+        enum SemiBold { // Capitalized for consistency
+            static func size(size: CGFloat) -> UIFont {
+                return UIFont(name: Constants.Oswald.semiBold, size: size)!
+            }
         }
     }
 }
@@ -35,3 +49,4 @@ private extension UIFont {
         }
     }
 }
+

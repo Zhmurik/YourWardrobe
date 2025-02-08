@@ -18,7 +18,7 @@ class OnboardingViewController: UIViewController {
     private let pageControl = UIPageControl()
     private let bottomButton = UIButton() 
     
-    weak var viewOutput: OnboardingViewOutput!
+    var viewOutput: OnboardingViewOutput!
     
     init(pages: [OnboardingPartViewController] = [OnboardingPartViewController](), viewOutput: OnboardingViewOutput!) {
         self.pages = pages
@@ -54,9 +54,8 @@ private extension OnboardingViewController {
             pageControl.currentPage = 3
             pageViewController.setViewControllers([pages[3]], direction: .forward, animated: true, completion: nil)
             bottomButton.setTitle(pages[3].buttonText, for: .normal)
-
         case 3:
-            print("Exit")
+            viewOutput.onboardingFinished()
         default : break
         }
     }
@@ -104,9 +103,9 @@ private extension OnboardingViewController {
         view.addSubview(bottomButton)
         bottomButton.translatesAutoresizingMaskIntoConstraints = false
         bottomButton.backgroundColor = AppColors.background
-        bottomButton.titleLabel?.font = .Oswald.bold(size:18)
+        bottomButton.titleLabel?.font = UIFont.Oswald.Bold.size(size:18)
         bottomButton.setTitleColor(AppColors.textPrimary, for: .normal)
-        bottomButton.layer.cornerRadius = 16
+        bottomButton.layer.cornerRadius = 24
         bottomButton.isEnabled = true
         bottomButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
     
