@@ -17,15 +17,16 @@ enum CoordinatorType {
 protocol CoordinatorProtocol: AnyObject {
     var childCoordinators: [CoordinatorProtocol] { get set }
     var type: CoordinatorType { get }
+    
     var navigationController: UINavigationController? { get set}
-    var finishDelegate: FinishCoordinatorDelegate? { get set }
+    var finishDelegate: CoordinatorFinishDelegate? { get set }
     
     func start()
     func finish()
 }
 
 protocol TabBarCoordinator: AnyObject, CoordinatorProtocol {
-    var tabBarController: UITabBarController! { get set }
+    var tabBarController: UITabBarController? { get set }
 }
 extension CoordinatorProtocol {
     func addChildCoordinator(_ childCoordinator: CoordinatorProtocol) {
@@ -36,28 +37,29 @@ extension CoordinatorProtocol {
     }
 }
 
-protocol FinishCoordinatorDelegate: AnyObject {
-    func coordinatorDidFinish(_ coordinator: CoordinatorProtocol)
+protocol CoordinatorFinishDelegate: AnyObject {
+    func coordinatorDidFinish(childCoordinator: CoordinatorProtocol)
 }
 
 class Coordinator: CoordinatorProtocol {
     func start() {
-        print("Coordinates started")
+        print("Coordinator started")
     }
     
     func finish() {
-        print("Coordinates finished")
+        print("Coordinator finished")
     }
     
     var childCoordinators: [CoordinatorProtocol] = []
     var type: CoordinatorType
     var navigationController: UINavigationController?
-    var finishDelegate: FinishCoordinatorDelegate?
+    var finishDelegate: CoordinatorFinishDelegate?
     
-    init(childCoordinators: [CoordinatorProtocol] = [],
+    init(childCoordinators: [CoordinatorProtocol] = [CoordinatorProtocol](),
          type: CoordinatorType,
+//         navigationController: UINavigationController? = nil
          navigationController: UINavigationController,
-         finishDelegate: FinishCoordinatorDelegate? = nil) {
+         finishDelegate: CoordinatorFinishDelegate? = nil) {
         self.childCoordinators = childCoordinators
         self.type = type
         self.navigationController = navigationController
@@ -65,7 +67,7 @@ class Coordinator: CoordinatorProtocol {
     }
 
     deinit {
-        print("Coordinator deinitialized \(type)")
+        print("Coordinator deiniеted \(type)")
         childCoordinators.forEach { $0.finishDelegate = nil }
         childCoordinators.removeAll()
     }

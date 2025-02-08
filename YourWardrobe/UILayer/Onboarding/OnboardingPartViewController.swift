@@ -27,6 +27,7 @@ class OnboardingPartViewController: UIViewController {
             descriptionLabel.text = descriptionText
         }
     }
+    var buttonText: String?
     
     // MARK: - Views
     private let imageView = UIImageView()
@@ -67,7 +68,7 @@ private extension OnboardingPartViewController {
     func setupTitleLabel() {
         view.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = .Oswald.bold(size:24)
+        titleLabel.font = UIFont.Oswald.Bold.size(size:24)
         titleLabel.textColor = AppColors.textPrimary
         titleLabel.textAlignment = .center
             
@@ -80,7 +81,7 @@ private extension OnboardingPartViewController {
     func setupDescriptionLabel() {
         view.addSubview(descriptionLabel)
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.font = .Oswald.regular(size:14)
+        descriptionLabel.font = UIFont.Oswald.Regular.size(size:14)
         descriptionLabel.textColor = AppColors.textPrimary
         descriptionLabel.numberOfLines = 0
         descriptionLabel.textAlignment = .center
@@ -92,4 +93,5 @@ private extension OnboardingPartViewController {
             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -72)
         ])
     }
+    
 }

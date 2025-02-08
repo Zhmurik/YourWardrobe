@@ -8,9 +8,15 @@
 import UIKit
 
 class AppCoordinator: Coordinator {
+    
+    private let userStorage = UserStorage.shared
+    
     override func start() {
-        showOnboardingFlow()
-//        showMainFlow()
+        if userStorage.passedOnboarding {
+            showMainFlow()
+        } else {
+            showOnboardingFlow()
+        }
     }
     
     override func finish() {
@@ -21,11 +27,19 @@ class AppCoordinator: Coordinator {
 // MARK: - Navigation methods
 private extension AppCoordinator {
     func showOnboardingFlow() {
+        // try to get navigation controller
+        
         guard let navigationController = navigationController else { return }
+        // if success create OnboardingCoordinator
+        
         let onboardingCoordinator = OnboardingCoordinator(
             type: .onboarding,
-            navigationController: navigationController)
+            navigationController: navigationController,
+            finishDelegate: self)
+        
+        // add OnboardingCoordinator to childs
         addChildCoordinator(onboardingCoordinator)
+        
         onboardingCoordinator.start()
     }
     
@@ -61,12 +75,15 @@ private extension AppCoordinator {
     }
 }
 
-extension AppCoordinator: FinishCoordinatorDelegate {
-    func coordinatorDidFinish(_ coordinator: CoordinatorProtocol) {
+extension AppCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator coordinator: CoordinatorProtocol) {
         removeChildCoordinator(coordinator)
 
         switch coordinator.type {
-        case .app:
+        case .onboarding:
+            navigationController?.viewControllers.removeAll()
+            showMainFlow()
+        case .app: 
             return
         default:
             navigationController?.popToRootViewController(animated: false)
