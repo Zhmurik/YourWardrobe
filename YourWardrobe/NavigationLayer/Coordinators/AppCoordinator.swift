@@ -18,7 +18,10 @@ class AppCoordinator: Coordinator {
         } else {
             showOnboardingFlow()
         }
-        let loginVC = LoginViewController()
+        
+        let loginPresenter = LoginPresenter(coordinator: self)
+        
+        let loginVC = LoginViewController(viewOutput: loginPresenter, state: .initial)
         navigationController?.pushViewController(loginVC, animated: true)
     }
     

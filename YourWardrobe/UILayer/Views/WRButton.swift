@@ -67,8 +67,8 @@ class WRButton: UIView {
             button.backgroundColor = AppColors.background
             button.setTitleColor(AppColors.textPrimary, for: .normal)
         case .orange:
-            button.backgroundColor = AppColors.menuColor
-            button.setTitleColor(AppColors.textPrimary, for: .normal)
+            button.backgroundColor = AppColors.accentColor
+            button.setTitleColor(.white, for: .normal)
         case .grey:
             button.backgroundColor = AppColors.textPrimary
             button.setTitleColor(AppColors.background, for: .normal)
