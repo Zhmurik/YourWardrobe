@@ -31,10 +31,17 @@ class LoginViewController: UIViewController {
     
     // MARK: - Views
     private lazy var bottomView = WRBottomView()
-    private lazy var textField =  WRTextField()
+    private lazy var titleLabel = UILabel()
+    private lazy var signInUsername =  WRTextField()
+    private lazy var signInPassword = WRTextField()
+    private lazy var signUpUserName = WRTextField()
+    private lazy var signUpPassword = WRTextField()
+    private lazy var signUpReEnterPassword = WRTextField()
+    private lazy var forgotLabel = UILabel()
     private lazy var logoImage = UIImageView()
     private lazy var signInButton = WRButton()
     private lazy var signUpButton = WRButton()
+
     
     // MARK: - initializers
     init(viewOutput: LoginViewOutputProtocol, state: LoginViewState) {
@@ -78,10 +85,16 @@ private extension LoginViewController {
 
         case .signIn:
             setupBottomView()
-            setupTextField()
+            setupSignInPassword()
+            setupSignInUsername()
+            setupTitleLabel()
+            setupSignInButton()
+            setupForgotLabel()
+
+            
         case .signUp:
             setupBottomView()
-            setupTextField()
+
         }
 
     }
@@ -98,31 +111,70 @@ private extension LoginViewController {
             
         ])
     }
-    func setupTextField() {
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setupSignInPassword() {
+        view.addSubview(signInPassword)
+        signInPassword.translatesAutoresizingMaskIntoConstraints = false
+        signInPassword.placeholder = "Password"
+        signInPassword.backgroundColor = AppColors.background
+        signInPassword.layer.borderColor = AppColors.accentColor.cgColor
+        signInPassword.layer.borderWidth = 0.5
         
         NSLayoutConstraint.activate([
-            textField.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            textField.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            textField.heightAnchor.constraint(equalToConstant: 50),
-            textField.widthAnchor.constraint(equalToConstant: 270)
+            signInPassword.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            signInPassword.heightAnchor.constraint(equalToConstant: 50),
+            signInPassword.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+            signInPassword.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30)
         ])
     }
+    
+    func setupSignInUsername() {
+        view.addSubview(signInUsername)
+        signInUsername.translatesAutoresizingMaskIntoConstraints = false
+        signInUsername.placeholder = "Username"
+        signInUsername.backgroundColor = AppColors.background
+        signInUsername.layer.borderColor = AppColors.accentColor.cgColor
+        signInUsername.layer.borderWidth = 0.5
+        
+        NSLayoutConstraint.activate([
+            signInUsername.bottomAnchor.constraint(equalTo: signInPassword.topAnchor, constant: -20),
+            signInUsername.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+            signInUsername.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+            signInUsername.heightAnchor.constraint(equalToConstant: 50),
+        ])
+    }
+    
+    func setupTitleLabel() {
+        view.addSubview(titleLabel)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = .Oswald.Bold.size(size: 36)
+        titleLabel.text = "Sign In"
+        
+        NSLayoutConstraint.activate([
+            titleLabel.bottomAnchor.constraint(equalTo: signInUsername.topAnchor, constant: -58),
+            titleLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+            titleLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+            titleLabel.heightAnchor.constraint(equalToConstant: 50),
+        ])
+    }
+
     
     func setupLogoImage() {
         view.addSubview(logoImage)
         
         logoImage.translatesAutoresizingMaskIntoConstraints = false
         logoImage.image = UIImage(resource: .logo)
+
         
         NSLayoutConstraint.activate([
-            logoImage.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 109),
+            logoImage.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 140),
             logoImage.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 70),
             logoImage.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -80),
             logoImage.heightAnchor.constraint(equalToConstant: 250)
         ])
     }
+    
     func setupSignInButton() {
         view.addSubview(signInButton)
         
@@ -130,14 +182,29 @@ private extension LoginViewController {
         signInButton.setTitle("Sign In")
         signInButton.scheme = .orange
         
-        NSLayoutConstraint.activate([
-            signInButton.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 90),
-            signInButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
-            signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
-            signInButton.heightAnchor.constraint(equalToConstant: 50)
-            
-        ])
+        switch state {
+        case .initial:
+
+            NSLayoutConstraint.activate([
+                signInButton.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 90),
+                signInButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+                signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+                signInButton.heightAnchor.constraint(equalToConstant: 50)
+                
+            ])
+        case .signIn:
+            NSLayoutConstraint.activate([
+                signInButton.topAnchor.constraint(equalTo: signInPassword.bottomAnchor, constant: 40),
+                signInButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+                signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+                signInButton.heightAnchor.constraint(equalToConstant: 50)
+                
+            ])
+        case .signUp:
+            print("Now empty")
+        }
     }
+    
     func setupSignUpButton() {
         view.addSubview(signUpButton)
         
@@ -150,6 +217,23 @@ private extension LoginViewController {
             signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
             signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
             signUpButton.heightAnchor.constraint(equalToConstant: 50)
+            
+        ])
+    }
+    
+    func setupForgotLabel() {
+        view.addSubview(forgotLabel)
+        
+        forgotLabel.translatesAutoresizingMaskIntoConstraints = false
+        forgotLabel.textColor = AppColors.textPrimary
+        forgotLabel.font = .Oswald.ExtraLight.size(size: 14)
+        forgotLabel.text = "Forgot Password?"
+        
+        NSLayoutConstraint.activate([
+            forgotLabel.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20),
+            forgotLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+
+            
             
         ])
     }
