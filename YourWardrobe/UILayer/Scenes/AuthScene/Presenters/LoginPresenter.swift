@@ -43,10 +43,10 @@ extension LoginPresenter: LoginViewOutputProtocol {
         
     }
     func goToSignIn() {
-        
+        coordinator?.showSignInScene()
     }
     func goToSignUp() {
-        
+        coordinator?.showSignUpScene()
     }
     func goToFogotPassword() {
         
