@@ -18,8 +18,6 @@ class AppCoordinator: Coordinator {
         } else {
             showOnboardingFlow()
         }
-        let loginVC = LoginViewController()
-        navigationController?.pushViewController(loginVC, animated: true)
     }
     
     override func finish() {
