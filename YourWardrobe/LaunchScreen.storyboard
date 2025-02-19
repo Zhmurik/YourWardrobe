@@ -15,24 +15,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image=" Logo" translatesAutoresizingMaskIntoConstraints="NO" id="5AW-LE-zfH">
-                                <rect key="frame" x="121" y="351" width="150" height="150"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image=" Logo" translatesAutoresizingMaskIntoConstraints="NO" id="5AW-LE-zfH">
+                                <rect key="frame" x="-38" y="301" width="468.99999999999989" height="250"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="DF6-71-Dnc"/>
+                                    <constraint firstAttribute="width" constant="150" id="4ex-jG-2NB"/>
+                                    <constraint firstAttribute="width" secondItem="5AW-LE-zfH" secondAttribute="height" multiplier="15:8" id="6Vf-ga-Y7t"/>
+                                    <constraint firstAttribute="height" constant="250" id="dGe-Wu-yfr"/>
                                     <constraint firstAttribute="width" secondItem="5AW-LE-zfH" secondAttribute="height" multiplier="15:8" id="g1j-YL-IqO"/>
-                                    <constraint firstAttribute="width" constant="150" id="ogf-bw-deO"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.84313726430000002" green="0.8156862855" blue="0.80392158030000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="KBu-Yl-Jqw"/>
                             <constraint firstItem="5AW-LE-zfH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Udq-d3-voL"/>
-                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="150" id="baR-7Y-fYG"/>
-                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="150" id="bcd-65-gY8"/>
-                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="iwo-I1-trR"/>
+                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="YR6-8T-UDT"/>
                             <constraint firstItem="5AW-LE-zfH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="oDD-rz-bOn"/>
+                            <constraint firstItem="5AW-LE-zfH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="zv7-Xf-cKA"/>
                         </constraints>
                     </view>
                 </viewController>

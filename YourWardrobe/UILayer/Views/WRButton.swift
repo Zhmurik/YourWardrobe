@@ -1,10 +1,9 @@
 //
-//  FWRButton.swift
+//  Untitled 2.swift
 //  YourWardrobe
 //
-//  Created by Anna Zhmurkova on 2/11/25.
+//  Created by Anna Zhmurkova on 2/18/25.
 //
-
 import UIKit
 
 
@@ -46,21 +45,21 @@ class WRButton: UIView {
         button.layer.cornerRadius = 24
         button.isEnabled = true
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-    
-        NSLayoutConstraint.activate([
-            button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            button.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            button.topAnchor.constraint(equalTo: self.topAnchor)
-        ])
-        
-    }
-    
+            
+                NSLayoutConstraint.activate([
+                    button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                    button.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+                    button.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+                    button.topAnchor.constraint(equalTo: self.topAnchor)
+                ])
+                
+            }
+            
     @objc func buttonPressed() {
         guard let action = action else { return }
-        action()
-    }
-    
+            action()
+        }
+            
     private func setColorScheme(scheme: WRButtonColorScemes) {
         switch scheme {
         case .white:
@@ -74,7 +73,7 @@ class WRButton: UIView {
             button.setTitleColor(AppColors.background, for: .normal)
         }
     }
-    
+            
     public func setTitle(_ title: String?) {
         button.setTitle(title, for: .normal)
     }

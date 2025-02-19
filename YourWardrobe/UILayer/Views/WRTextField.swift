@@ -1,8 +1,8 @@
 //
-//  FRTextField.swift
+//  Untitled.swift
 //  YourWardrobe
 //
-//  Created by Anna Zhmurkova on 2/11/25.
+//  Created by Anna Zhmurkova on 2/18/25.
 //
 
 import UIKit
@@ -27,7 +27,7 @@ class WRTextField: UITextField {
         self.leftView = paddingView
         self.rightView = paddingView
         self.leftViewMode = .always
-        self.rightViewMode = .always 
+        self.rightViewMode = .always
     }
 
 }
