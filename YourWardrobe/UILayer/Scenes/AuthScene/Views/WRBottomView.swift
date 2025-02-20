@@ -65,6 +65,8 @@ class WRBottomView: UIView {
         self.addSubview(view2)
         view2.image = UIImage(named: "auth-wardrobe")
         view2.translatesAutoresizingMaskIntoConstraints = false
+//        view2.contentMode = .scaleAspectFill
+//        view2.clipsToBounds = true
         
         
         NSLayoutConstraint.activate([
@@ -115,6 +117,6 @@ private extension WRBottomView {
     
 
 
-#Preview("BottomView", traits: .fixedLayout(width: 400, height: 150)) {
-    WRBottomView()
-}
+//#Preview("BottomView", traits: .fixedLayout(width: 400, height: 150)) {
+//    WRBottomView()
+//}
