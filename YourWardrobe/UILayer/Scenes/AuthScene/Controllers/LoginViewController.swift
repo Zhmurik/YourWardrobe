@@ -70,9 +70,6 @@ class LoginViewController: UIViewController {
         setupLayout()
         setupObservers()
         
-        bottomView.button1Action = gmailPress
-        bottomView.button2Action = facebookPress
-        
     }
     
 
@@ -171,6 +168,13 @@ private extension LoginViewController {
         view.addSubview(bottomView)
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         
+        bottomView.button1Action = { [weak self] in
+            self?.gmailPress()
+        }
+        bottomView.button2Action = { [weak self] in
+            self?.facebookPress()
+        }
+        
         NSLayoutConstraint.activate([
             bottomView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
             bottomView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -251,7 +255,9 @@ private extension LoginViewController {
         signInButton.translatesAutoresizingMaskIntoConstraints = false
         signInButton.setTitle("Sign In")
         signInButton.scheme = .orange
-        signInButton.action = onSignInTapped
+        signInButton.action = { [weak self] in
+            self?.onSignInTapped()
+        }
         switch state {
         case .initial:
             NSLayoutConstraint.activate([
@@ -276,7 +282,9 @@ private extension LoginViewController {
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
         signUpButton.setTitle("Sign Up")
         signUpButton.scheme = .orange
-        signUpButton.action = onSignUpTapped
+        signUpButton.action = { [weak self] in
+            self?.onSignUpTapped()
+        }
         
         NSLayoutConstraint.activate([
             signUpButton.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20),
