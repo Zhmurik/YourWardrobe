@@ -37,9 +37,9 @@ private extension LoginPresenter {
 
 extension LoginPresenter: LoginViewOutputProtocol {
     func loginStart(login: String, password: String) {
-        viewInput?.starLoader()
+        viewInput?.startLoader()
         if login == "Test@gmail.com" && password == "123" {
-            DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
                 DispatchQueue.main.async {
                     self.viewInput?.stopLoader()
                     self.goToMainScreen()

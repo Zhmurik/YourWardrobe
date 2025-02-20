@@ -14,7 +14,7 @@ enum LoginViewState {
 }
 
 protocol LoginViewInputProtocol: AnyObject {
-    func starLoader()
+    func startLoader()
     func stopLoader()
 
 }
@@ -105,7 +105,6 @@ private extension LoginViewController {
             setupForgotLabel()
             setupNavigationBar()
             
-            
         case .signUp:
             setupBottomView()
             setupStack()
@@ -117,7 +116,7 @@ private extension LoginViewController {
             setupForgotLabel()
             setupNavigationBar()
         }
-        setupLoaderView
+        setupLoaderView()
     }
     
     
@@ -128,7 +127,7 @@ private extension LoginViewController {
                                              target: navigationController,
                                              action: #selector(navigationController?.popViewController(animated: )))
         navigationItem.leftBarButtonItem = backButtonItem
-        backButtonItem.tintColor = AppColors.textPrimary
+        navigationItem.leftBarButtonItem?.tintColor = AppColors.textPrimary
     }
     
     func setupStack() {
@@ -369,6 +368,10 @@ private extension LoginViewController {
 
 // MARK: Private Methods
 private extension LoginViewController {
+    func onBackPressed() {
+             
+         }
+    
     func onSignInTapped() {
          switch state {
          case .initial:
@@ -404,16 +407,16 @@ private extension LoginViewController {
          
      }
      
-     func onBackPressed() {
-         
-     }
+     
 }
 // MARK: - LoginViewInput delegate
 extension LoginViewController: LoginViewInputProtocol {
     func startLoader() {
+        loaderContainer.isHidden = false
         loader.startAnimating()
     }
     func stopLoader() {
+        loaderContainer.isHidden = true
         loader.stopAnimating()
     }
 }
