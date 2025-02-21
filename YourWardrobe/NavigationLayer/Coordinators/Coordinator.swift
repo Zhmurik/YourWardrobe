@@ -58,7 +58,6 @@ class Coordinator: CoordinatorProtocol {
     
     init(childCoordinators: [CoordinatorProtocol] = [CoordinatorProtocol](),
          type: CoordinatorType,
-//         navigationController: UINavigationController? = nil
          navigationController: UINavigationController,
          finishDelegate: CoordinatorFinishDelegate? = nil) {
         self.childCoordinators = childCoordinators
