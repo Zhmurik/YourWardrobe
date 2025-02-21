@@ -23,8 +23,14 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tabBar.backgroundColor = AppColors.background
         tabBar.tintColor = AppColors.accentColor
         tabBar.unselectedItemTintColor = AppColors.menuColor
+        
+        tabBar.itemPositioning = .centered
+        tabBar.itemWidth = 80.0
+        tabBar.itemSpacing = 50.0
+        
+        UITabBarItem.appearance().titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -3)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.Oswald.Regular.size(size: 12)], for: .normal)
     }
 }
