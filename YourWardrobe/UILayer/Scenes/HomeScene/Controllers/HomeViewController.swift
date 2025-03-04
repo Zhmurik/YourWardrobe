@@ -9,9 +9,10 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     // Collection main icons
     lazy var smallHCollection: UICollectionView = {
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.headerReferenceSize = .zero
@@ -53,7 +54,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
-        
     }
     
    
@@ -61,6 +61,9 @@ class HomeViewController: UIViewController {
 //MARK: Layout
 extension HomeViewController {
     func setupLayout(){
+        configureScrollView()
+        configureContentView()
+        prepareScrollView()
         setupView()
         setupSmallHCollection()
         setupBigHCollection()
@@ -69,8 +72,38 @@ extension HomeViewController {
     func  setupView() {
         
     }
+    func configureScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        scrollView.backgroundColor = .brown
+    }
+    
+    func configureContentView() {
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.backgroundColor = .systemMint
+    }
+    
+    func prepareScrollView() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+    }
+    
     func setupSmallHCollection() {
-        view.addSubview(smallHCollection)
+        contentView.addSubview(smallHCollection)
         
         smallHCollection.translatesAutoresizingMaskIntoConstraints = false
 //        smallHCollection.backgroundColor = .red
@@ -80,15 +113,15 @@ extension HomeViewController {
         
         
         NSLayoutConstraint.activate([
-            smallHCollection.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            smallHCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            smallHCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            smallHCollection.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 100),
+            smallHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            smallHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             smallHCollection.heightAnchor.constraint(equalToConstant: 90),
         ])
     }
     
     func setupBigHCollection() {
-        view.addSubview(bigHCollection)
+        contentView.addSubview(bigHCollection)
         
         bigHCollection.translatesAutoresizingMaskIntoConstraints = false
         bigHCollection.delegate = self
@@ -98,14 +131,14 @@ extension HomeViewController {
         
         NSLayoutConstraint.activate([
             bigHCollection.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 100),
-            bigHCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            bigHCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bigHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            bigHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bigHCollection.heightAnchor.constraint(equalToConstant: 130*2+20),
         ])
     }
     
     func setupBigVCollection() {
-        view.addSubview(bigVCollection)
+        contentView.addSubview(bigVCollection)
         
         bigVCollection.translatesAutoresizingMaskIntoConstraints = false
         bigVCollection.delegate = self
@@ -115,9 +148,10 @@ extension HomeViewController {
         
         NSLayoutConstraint.activate([
             bigVCollection.topAnchor.constraint(equalTo: bigHCollection.bottomAnchor, constant: 50),
-            bigVCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            bigVCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            bigVCollection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bigVCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            bigVCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            bigVCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            bigVCollection.heightAnchor.constraint(equalToConstant: 1000)
         ])
     }
 }
