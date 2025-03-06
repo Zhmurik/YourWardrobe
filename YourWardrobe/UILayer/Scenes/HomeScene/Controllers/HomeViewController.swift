@@ -47,6 +47,7 @@ class HomeViewController: UIViewController {
         layout.minimumInteritemSpacing = 20
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.isScrollEnabled = false
         collection.tag = 3
         return collection
     }()
@@ -68,6 +69,8 @@ extension HomeViewController {
         setupSmallHCollection()
         setupBigHCollection()
         setupBigVCollection()
+        // TODO: Only for mock data
+        calculateContentSize()
     }
     func  setupView() {
         
@@ -153,6 +156,19 @@ extension HomeViewController {
             bigVCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             bigVCollection.heightAnchor.constraint(equalToConstant: 1000)
         ])
+    }
+    func calculateContentSize() {
+        var totalHeight: CGFloat = 300 + 50 + 50 + smallHCollection.bounds.height + bigHCollection.bounds.height
+        
+        for index in 0..<bigVCollection.numberOfItems(inSection: 0) {
+            let indexPath = IndexPath(item: index, section: 0)
+            let cellHeight = collectionView(bigVCollection, layout: bigVCollection.collectionViewLayout, sizeForItemAt: indexPath).height
+            totalHeight += cellHeight
+        }
+        
+        let spasing = CGFloat(bigVCollection.numberOfItems(inSection: 0) - 1) * 30
+        
+        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spasing).isActive = true
     }
 }
 
