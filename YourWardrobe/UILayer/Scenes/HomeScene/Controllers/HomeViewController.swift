@@ -11,6 +11,7 @@ class HomeViewController: UIViewController {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let searchBar = WRSearchField()
     // Collection main icons
     lazy var smallHCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -65,6 +66,7 @@ extension HomeViewController {
         configureScrollView()
         configureContentView()
         prepareScrollView()
+        configureSearchBar()
         setupView()
         setupSmallHCollection()
         setupBigHCollection()
@@ -73,18 +75,18 @@ extension HomeViewController {
         calculateContentSize()
     }
     func  setupView() {
-        
+        navigationController?.navigationBar.isHidden = true
     }
     func configureScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = true
         scrollView.alwaysBounceVertical = true
-        scrollView.backgroundColor = .brown
+        scrollView.backgroundColor = .clear
     }
     
     func configureContentView() {
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.backgroundColor = .systemMint
+        contentView.backgroundColor = .clear
     }
     
     func prepareScrollView() {
@@ -102,6 +104,18 @@ extension HomeViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+    }
+    func configureSearchBar() {
+        contentView.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            searchBar.heightAnchor.constraint(equalToConstant: 50),
+//            searchBar.bottomAnchor.constraint(equalTo: <#T##NSLayoutAnchor<NSLayoutYAxisAnchor>#>, constant: <#T##CGFloat#>)
         ])
     }
     
@@ -154,7 +168,7 @@ extension HomeViewController {
             bigVCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             bigVCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             bigVCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            bigVCollection.heightAnchor.constraint(equalToConstant: 1000)
+
         ])
     }
     func calculateContentSize() {
