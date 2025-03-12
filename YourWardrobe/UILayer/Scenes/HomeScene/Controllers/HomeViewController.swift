@@ -12,6 +12,8 @@ class HomeViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let searchBar = WRSearchField()
+    private let geoMarkImage = UIImageView()
+    private let geoLabel = UILabel()
     // Collection main icons
     lazy var smallHCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -67,6 +69,8 @@ extension HomeViewController {
         configureContentView()
         prepareScrollView()
         configureSearchBar()
+        configureGeoMark()
+        configureGeoLabel()
         setupView()
         setupSmallHCollection()
         setupBigHCollection()
@@ -115,10 +119,39 @@ extension HomeViewController {
             searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
-//            searchBar.bottomAnchor.constraint(equalTo: <#T##NSLayoutAnchor<NSLayoutYAxisAnchor>#>, constant: <#T##CGFloat#>)
         ])
     }
     
+    func configureGeoMark() {
+        contentView.addSubview(geoMarkImage)
+        
+        geoMarkImage.image = UIImage(resource: .lacationMark)
+        
+        geoMarkImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            geoMarkImage.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
+            geoMarkImage.widthAnchor.constraint(equalToConstant: 14),
+            geoMarkImage.heightAnchor.constraint(equalToConstant: 20),
+            geoMarkImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30)
+        ])
+    }
+    func configureGeoLabel() {
+        contentView.addSubview(geoLabel)
+        
+        geoLabel.text = "Evelyn, Sunnyvale, CA"
+        geoLabel.translatesAutoresizingMaskIntoConstraints = false
+        geoLabel.numberOfLines = 0
+        geoLabel.font = UIFont.Oswald.Regular.size(size: 12)
+        geoLabel.textColor = AppColors.menuColor
+        
+        NSLayoutConstraint.activate([
+            geoLabel.centerYAnchor.constraint(equalTo: geoMarkImage.centerYAnchor, constant: 0),
+            geoLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
+            geoLabel.leftAnchor.constraint(equalTo: geoMarkImage.rightAnchor, constant: 30),
+            geoLabel.heightAnchor.constraint(equalToConstant: 16)
+        ])
+    }
     func setupSmallHCollection() {
         contentView.addSubview(smallHCollection)
         
@@ -130,7 +163,7 @@ extension HomeViewController {
         
         
         NSLayoutConstraint.activate([
-            smallHCollection.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 100),
+            smallHCollection.topAnchor.constraint(equalTo: geoMarkImage.topAnchor, constant: 70),
             smallHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             smallHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             smallHCollection.heightAnchor.constraint(equalToConstant: 90),
@@ -147,8 +180,8 @@ extension HomeViewController {
         
         
         NSLayoutConstraint.activate([
-            bigHCollection.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 100),
-            bigHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            bigHCollection.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 70),
+            bigHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             bigHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bigHCollection.heightAnchor.constraint(equalToConstant: 130*2+20),
         ])
