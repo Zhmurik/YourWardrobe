@@ -13,6 +13,9 @@ class HomeViewController: UIViewController {
     private let contentView = UIView()
     private let searchBar = WRSearchField()
     private let geoMarkImage = UIImageView()
+    
+    private let categoryHCollectionTitle = WRCollectionTitle()
+    private let recommendationVCollectionTitle = WRCollectionTitle()
     private let geoLabel = UILabel()
     // Collection main icons
     lazy var smallHCollection: UICollectionView = {
@@ -73,7 +76,9 @@ extension HomeViewController {
         configureGeoLabel()
         setupView()
         setupSmallHCollection()
+        configureCategoryCollectionTitle()
         setupBigHCollection()
+        configureRecommendationVCollectionTitle()
         setupBigVCollection()
         // TODO: Only for mock data
         calculateContentSize()
@@ -152,6 +157,7 @@ extension HomeViewController {
             geoLabel.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
+    
     func setupSmallHCollection() {
         contentView.addSubview(smallHCollection)
         
@@ -186,7 +192,30 @@ extension HomeViewController {
             bigHCollection.heightAnchor.constraint(equalToConstant: 130*2+20),
         ])
     }
-    
+    func configureCategoryCollectionTitle() {
+        contentView.addSubview(categoryHCollectionTitle)
+        categoryHCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
+//        categoryHCollectionTitle.text = "Ctalog"
+        
+        NSLayoutConstraint.activate([
+            categoryHCollectionTitle.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 45),
+            categoryHCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            categoryHCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
+            categoryHCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
+        ])
+    }
+    func configureRecommendationVCollectionTitle() {
+        contentView.addSubview(recommendationVCollectionTitle)
+        recommendationVCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
+//        categoryHCollectionTitle.text = "Ctalog"
+        
+        NSLayoutConstraint.activate([
+            recommendationVCollectionTitle.topAnchor.constraint(equalTo: bigHCollection.bottomAnchor, constant: 30),
+            recommendationVCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            recommendationVCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
+            recommendationVCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
+        ])
+    }
     func setupBigVCollection() {
         contentView.addSubview(bigVCollection)
         
@@ -197,7 +226,7 @@ extension HomeViewController {
         
         
         NSLayoutConstraint.activate([
-            bigVCollection.topAnchor.constraint(equalTo: bigHCollection.bottomAnchor, constant: 50),
+            bigVCollection.topAnchor.constraint(equalTo: recommendationVCollectionTitle.bottomAnchor, constant: 26),
             bigVCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             bigVCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             bigVCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -205,7 +234,7 @@ extension HomeViewController {
         ])
     }
     func calculateContentSize() {
-        var totalHeight: CGFloat = 300 + 50 + 50 + smallHCollection.bounds.height + bigHCollection.bounds.height
+        var totalHeight: CGFloat = 300 + 50 + 50 + 22 + 22 + 30 + 30 + 30 + smallHCollection.bounds.height + bigHCollection.bounds.height
         
         for index in 0..<bigVCollection.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: index, section: 0)
