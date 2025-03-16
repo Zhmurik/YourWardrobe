@@ -127,4 +127,10 @@ struct SceneFactory {
         let controller = HomeViewController()
         return controller
     }
+    
+    static func makeWardrobeScene(coordinator: WardrobeCoordinator) -> WardrobeViewController {
+        let presenter = WardrobePresenter(coordinator: coordinator)
+        let controller = WardrobeViewController(presenter: presenter)
+        return controller
+    }
 }
