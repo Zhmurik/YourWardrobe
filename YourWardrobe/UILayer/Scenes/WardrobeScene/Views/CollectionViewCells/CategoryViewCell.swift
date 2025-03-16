@@ -11,6 +11,9 @@ class CategoryViewCell: UICollectionViewCell {
     
     let topView = UIView()
     let bottomLabel = UILabel()
+    let imageViewCategory = UIImageView()
+    
+    var isCategorySelected = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,8 +23,36 @@ class CategoryViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configure(with category: WardrobeMainCategory, isSelected: Bool) {
+        
+        bottomLabel.text = category.rawValue
+        updateSelectionState(isSelected)
+        
+        switch category {
+        case .clothes:
+            print(category)
+            imageViewCategory.image = UIImage(resource: .wrClothes).withTintColor(.black)
+        case .shoes:
+            imageViewCategory.image = UIImage(resource: .wrShoes).withTintColor(.black)
+            print(category)
+        case .accessories:
+            imageViewCategory.image = UIImage(resource: .wrAccessories).withTintColor(.black)
+            print(category)
+        case .bags:
+            imageViewCategory.image = UIImage(resource: .wrBags).withTintColor(.black)
+            print(category)
+        case .seasonal:
+            imageViewCategory.image = UIImage(resource: .wrSeasonal).withTintColor(.black)
+            print(category)
+        }
+    }
+    
+    func updateSelectionState(_ isSelected: Bool) {
+        topView.backgroundColor = isSelected ? AppColors.accentColor : .clear
+    }
+    
     func setupCell() {
-//        contentView.backgroundColor = AppColors.testColor1
+        contentView.backgroundColor = .clear
         setupTopView()
         setupBottomLabel()
     }
@@ -30,7 +61,9 @@ class CategoryViewCell: UICollectionViewCell {
         contentView.addSubview(topView)
         
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = AppColors.testColor2
+//        topView.backgroundColor = AppColors.testColor2
+        topView.layer.borderColor = AppColors.testColor1.cgColor
+        topView.layer.borderWidth = 1
         topView.layer.cornerRadius = 20
         topView.layer.masksToBounds = true
         
@@ -40,6 +73,19 @@ class CategoryViewCell: UICollectionViewCell {
             topView.widthAnchor.constraint(equalToConstant: 70),
             topView.heightAnchor.constraint(equalToConstant: 67),
         ])
+        
+        imageViewCategory.translatesAutoresizingMaskIntoConstraints = false
+        imageViewCategory.contentMode = .scaleAspectFit
+        imageViewCategory.clipsToBounds = true
+        
+        topView.addSubview(imageViewCategory)
+        
+        NSLayoutConstraint.activate([
+            imageViewCategory.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            imageViewCategory.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
+            imageViewCategory.widthAnchor.constraint(equalToConstant: 67),
+            imageViewCategory.heightAnchor.constraint(equalToConstant: 66),
+            ])
     }
     func setupBottomLabel() {
         contentView.addSubview(bottomLabel)

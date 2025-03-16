@@ -6,10 +6,9 @@
 //
 
 enum WardrobeMainCategory: String, Codable, CaseIterable {
-    case clothes
-    case shoes
-    case accessories
-    case bags
-    case seasonal
-    case none
+    case clothes = "Clothes"
+    case shoes = "Shoes"
+    case accessories = "Accessories"
+    case bags = "Bags"
+    case seasonal = "Seasonal"
 }

@@ -19,6 +19,8 @@ class WardrobeViewController: UIViewController {
     private let searchBar = WRSearchField()
     private let geoMarkImage = UIImageView()
     
+    var selectedCategoryIndex: IndexPath?
+    
     private let subCategoryCollectionTitle = WRCollectionTitle()
     private let recomendCollectionTitle = WRCollectionTitle()
     private let geoLabel = UILabel()
@@ -176,6 +178,7 @@ extension WardrobeViewController {
         categoryCollection.delegate = self
         categoryCollection.dataSource = self
         categoryCollection.register(CategoryViewCell.self, forCellWithReuseIdentifier: "CategoryViewCell")
+        categoryCollection.showsHorizontalScrollIndicator = false
         
         NSLayoutConstraint.activate([
             categoryCollection.topAnchor.constraint(equalTo: geoMarkImage.topAnchor, constant: 70),
@@ -192,6 +195,7 @@ extension WardrobeViewController {
         subCategoryCollection.delegate = self
         subCategoryCollection.dataSource = self
         subCategoryCollection.register(SubCategoryViewCell.self, forCellWithReuseIdentifier: "SubCategoryViewCell")
+        subCategoryCollection.showsHorizontalScrollIndicator = false
         
         
         NSLayoutConstraint.activate([
@@ -257,10 +261,11 @@ extension WardrobeViewController {
 
 //MARK: - CollectionView delegate
 extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 1:
-            return 6
+            return presenter.maincategoryData.count
         case 2:
             return 10
         case 3:
@@ -273,19 +278,44 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView.tag {
         case 1:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryViewCell", for: indexPath)
-                return cell
+            let category = presenter.maincategoryData[indexPath.row]
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryViewCell", for: indexPath) as? CategoryViewCell
+            
+            let isSelected = (indexPath == selectedCategoryIndex)
+            cell?.configure(with: category, isSelected: isSelected)
+            
+            return cell ?? UICollectionViewCell()
         case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath)
-                return cell
+            return collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath)
         case 3:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
-                return cell
+            return collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
         default:
             return UICollectionViewCell()
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView.tag {
+        case 1:
+            if selectedCategoryIndex == indexPath {
+                selectedCategoryIndex = nil
+            } else {
+                selectedCategoryIndex = indexPath
+            }
+            
+            collectionView.reloadData() 
+            
+        case 2:
+            print("Subcategory selected")
+        case 3:
+            print("Recommended outfit selected")
+        default:
+            print("Unknown selection")
+        }
+    }
 }
+
+
 
 extension WardrobeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

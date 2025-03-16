@@ -23,12 +23,16 @@ class WardrobePresenter:WardrobePresenterProtocol {
     // MARK: - Initializers
     init(coordinator: WardrobeCoordinator) {
         self.coordinator = coordinator
+        getCategoryData()
     }
     
     // MARK: - Methods
     func getSelectedCategory() -> WardrobeMainCategory {
-        return .none
+        return .clothes
     }
     
-    
+    private func getCategoryData() {
+        // Mock data
+        maincategoryData = [.clothes, .shoes, .accessories, .bags, .seasonal]
+    }
 }
