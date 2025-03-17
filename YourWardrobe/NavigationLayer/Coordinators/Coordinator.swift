@@ -13,6 +13,7 @@ enum CoordinatorType {
     case wardrobe
     case profile
     case login
+    case wardrobeAddItem
 }
 
 protocol CoordinatorProtocol: AnyObject {

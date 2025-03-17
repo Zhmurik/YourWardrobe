@@ -88,17 +88,24 @@ struct SceneFactory {
         wardrobeCoordinator.finishDelegate = finishDelegate
         wardrobeCoordinator.start()
         
+        let wardrobeaddItemNavigationController = UINavigationController()
+        let wardrobeAddItemCoordinator = WardrobeAddItemCoordinator(type: .wardrobeAddItem, navigationController: wardrobeaddItemNavigationController)
+        wardrobeaddItemNavigationController.tabBarItem = UITabBarItem(title: "Add Item", image: UIImage(systemName: "plus.circle"), tag: 3)
+        wardrobeAddItemCoordinator.finishDelegate = finishDelegate
+        wardrobeAddItemCoordinator.start()
+        
         let profileNavigationController = UINavigationController()
         let profileCoordinator = ProfileCoordinator(type: .profile, navigationController: profileNavigationController)
-        profileNavigationController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 2)
+        profileNavigationController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 4)
         profileCoordinator.finishDelegate = finishDelegate
         profileCoordinator.start()
         
         coordinator.addChildCoordinator(homeCoordinator)
         coordinator.addChildCoordinator(wardrobeCoordinator)
+        coordinator.addChildCoordinator(wardrobeAddItemCoordinator)
         coordinator.addChildCoordinator(profileCoordinator)
         
-        let tabBarControllers = [homeNavigationController, wardrobeNavigationController, profileNavigationController]
+        let tabBarControllers = [homeNavigationController, wardrobeNavigationController, wardrobeaddItemNavigationController, profileNavigationController]
         let tabBarController = TabBarController(tabBarControllers: tabBarControllers)
         
         return tabBarController
