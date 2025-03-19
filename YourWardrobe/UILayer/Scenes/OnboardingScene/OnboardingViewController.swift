@@ -90,8 +90,6 @@ private extension OnboardingViewController {
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(pageControl)
         
         NSLayoutConstraint.activate([

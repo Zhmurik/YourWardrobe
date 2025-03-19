@@ -21,8 +21,8 @@ class WardrobeViewController: UIViewController {
     
     var selectedCategoryIndex: IndexPath?
     
-    private let subCategoryCollectionTitle = WRCollectionTitle()
-    private let recomendCollectionTitle = WRCollectionTitle()
+    private let subCategoryCollectionTitle = WRCollectionTitle(title: "Category")
+    private let recomendCollectionTitle = WRCollectionTitle(title: "Recommended Outfit")
     private let geoLabel = UILabel()
     
     // MARK: - Collection main icons
@@ -77,6 +77,7 @@ class WardrobeViewController: UIViewController {
     // MARK: - Lifesycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = AppColors.background
         setupLayout()
     }
 }
@@ -175,6 +176,7 @@ extension WardrobeViewController {
         contentView.addSubview(categoryCollection)
         
         categoryCollection.translatesAutoresizingMaskIntoConstraints = false
+        categoryCollection.backgroundColor = .clear
         categoryCollection.delegate = self
         categoryCollection.dataSource = self
         categoryCollection.register(CategoryViewCell.self, forCellWithReuseIdentifier: "CategoryViewCell")
@@ -192,6 +194,7 @@ extension WardrobeViewController {
         contentView.addSubview(subCategoryCollection)
         
         subCategoryCollection.translatesAutoresizingMaskIntoConstraints = false
+        subCategoryCollection.backgroundColor = .clear
         subCategoryCollection.delegate = self
         subCategoryCollection.dataSource = self
         subCategoryCollection.register(SubCategoryViewCell.self, forCellWithReuseIdentifier: "SubCategoryViewCell")
@@ -231,6 +234,7 @@ extension WardrobeViewController {
         contentView.addSubview(reccomendedOutfitCollection)
         
         reccomendedOutfitCollection.translatesAutoresizingMaskIntoConstraints = false
+        reccomendedOutfitCollection.backgroundColor = .clear
         reccomendedOutfitCollection.delegate = self
         reccomendedOutfitCollection.dataSource = self
         reccomendedOutfitCollection.register(ReccomOutfitViewCell.self, forCellWithReuseIdentifier: "ReccomOutfitViewCell")
@@ -303,7 +307,7 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
                 selectedCategoryIndex = indexPath
             }
             
-            collectionView.reloadData() 
+            collectionView.reloadData()
             
         case 2:
             print("Subcategory selected")

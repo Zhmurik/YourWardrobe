@@ -12,9 +12,13 @@ class WRCollectionTitle: UIView {
     let collectionTitle = UILabel()
     let viewAllButton = UIButton()
     
-    init() {
+    private let titleText: String
+    
+    init(title: String) {
+        self.titleText = title
         super.init(frame: .zero)
         setupLayout()
+        collectionTitle.text = titleText  // Устанавливаем заголовок
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +44,7 @@ private extension WRCollectionTitle {
         collectionTitle.translatesAutoresizingMaskIntoConstraints = false
         collectionTitle.backgroundColor = .clear
         collectionTitle.font = UIFont.Oswald.Bold.size(size: 18)
-        collectionTitle.text = "Category"
+//        collectionTitle.text = "Category"
             
         NSLayoutConstraint.activate([
             collectionTitle.centerYAnchor.constraint(equalTo: self.centerYAnchor),

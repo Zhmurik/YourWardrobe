@@ -8,23 +8,18 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
-
-    // MARK: - Properies
-//    var presenter: WardrobePresenterProtocol
     
-    // MARK: - Views
-    private let scrollView = UIScrollView()
+    // MARK: - UI Elements
     private let contentView = UIView()
-    private let searchBar = WRSearchField()
-    private let geoMarkImage = UIImageView()
+    private let scrollView = UIScrollView()
     
-    private let categoryHCollectionTitle = WRCollectionTitle()
-    private let recommendationVCollectionTitle = WRCollectionTitle()
-    private let geoLabel = UILabel()
+    private let profileIcon = UIImageView()
+    private let userNameLabel = UILabel()
+    private let findLookLabel = UILabel()
+    private let findYourLookToday = UIImageView()
     
-    // MARK: - Collection main icons
-    lazy var smallHCollection: UICollectionView = {
+    private let recommendedTitle = WRCollectionTitle(title: "Recommended Outfit")
+    private var recommendedCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.headerReferenceSize = .zero
@@ -32,38 +27,19 @@ class HomeViewController: UIViewController {
         layout.minimumInteritemSpacing = 40
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.tag = 1
-
+        
         return collection
     }()
-    lazy var bigHCollection: UICollectionView = {
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.tag = 2
-        return collection
-    }()
-    lazy var bigVCollection: UICollectionView = {
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 20
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.isScrollEnabled = false
-        collection.tag = 3
-        return collection
-    }()
+    private let weatherIcon = UIImageView()
+    private let weatherLabel = UILabel()
     
     // MARK: - Initializers
     init() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 15
+        self.recommendedCollection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,31 +47,27 @@ class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Lifesycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = AppColors.background
         setupLayout()
+        view.layoutIfNeeded()
     }
 }
-
-//MARK: Layout
+    
 extension HomeViewController {
-    func setupLayout(){
+    func setupLayout() {
         configureScrollView()
         configureContentView()
         prepareScrollView()
-        configureSearchBar()
-        configureGeoMark()
-        configureGeoLabel()
         setupView()
-        setupSmallHCollection()
-        configureCategoryCollectionTitle()
-        setupBigHCollection()
-        configureRecommendationVCollectionTitle()
-        setupBigVCollection()
-        // TODO: Only for mock data
-        calculateContentSize()
+        setupProfileImageView()
+        setupNameLabel()
+        setupFindYourLookLabel()
+        setupFindYourLookButton()
     }
+    
     func  setupView() {
         navigationController?.navigationBar.isHidden = true
     }
@@ -104,13 +76,16 @@ extension HomeViewController {
         scrollView.showsVerticalScrollIndicator = true
         scrollView.alwaysBounceVertical = true
         scrollView.backgroundColor = .clear
+        
+//        scrollView.delaysContentTouches = false
+        
     }
-    
     func configureContentView() {
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.backgroundColor = .clear
+        
+//        contentView.isUserInteractionEnabled = false
+
     }
-    
     func prepareScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -128,184 +103,70 @@ extension HomeViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
     }
-    func configureSearchBar() {
-        contentView.addSubview(searchBar)
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setupProfileImageView() {
+        contentView.addSubview(profileIcon)
+        profileIcon.translatesAutoresizingMaskIntoConstraints = false
+        profileIcon.image = UIImage(systemName: "person.crop.circle")
+        profileIcon.tintColor = AppColors.testColor2
         
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            searchBar.heightAnchor.constraint(equalToConstant: 50),
+            profileIcon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
+            profileIcon.widthAnchor.constraint(equalToConstant: 80),
+            profileIcon.heightAnchor.constraint(equalToConstant: 80),
+            profileIcon.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30)
+        ])
+    }
+    func setupNameLabel() {
+        contentView.addSubview(userNameLabel)
+        userNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        userNameLabel.text = "John Doe"
+        userNameLabel.font = UIFont.Oswald.Regular.size(size: 16)
+        userNameLabel.textColor = AppColors.menuColor
+        
+        NSLayoutConstraint.activate([
+            userNameLabel.centerYAnchor.constraint(equalTo: profileIcon.centerYAnchor, constant: 0),
+            userNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
+            userNameLabel.leftAnchor.constraint(equalTo: profileIcon.rightAnchor, constant: 30),
+            userNameLabel.heightAnchor.constraint(equalToConstant: 16)
         ])
     }
     
-    func configureGeoMark() {
-        contentView.addSubview(geoMarkImage)
-        
-        geoMarkImage.image = UIImage(resource: .lacationMark)
-        
-        geoMarkImage.translatesAutoresizingMaskIntoConstraints = false
+    func setupFindYourLookLabel() {
+        contentView.addSubview(findLookLabel)
+        findLookLabel.translatesAutoresizingMaskIntoConstraints = false
+        findLookLabel.text = "Find your look"
+        findLookLabel.font = UIFont.Oswald.Regular.size(size: 24)
+        findLookLabel.textColor = AppColors.menuColor
         
         NSLayoutConstraint.activate([
-            geoMarkImage.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
-            geoMarkImage.widthAnchor.constraint(equalToConstant: 14),
-            geoMarkImage.heightAnchor.constraint(equalToConstant: 20),
-            geoMarkImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30)
+            findLookLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 100),
+            findLookLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
     }
-    func configureGeoLabel() {
-        contentView.addSubview(geoLabel)
+    func setupFindYourLookButton() {
+        contentView.addSubview(findYourLookToday)
         
-        geoLabel.text = "Evelyn, Sunnyvale, CA"
-        geoLabel.translatesAutoresizingMaskIntoConstraints = false
-        geoLabel.numberOfLines = 0
-        geoLabel.font = UIFont.Oswald.Regular.size(size: 12)
-        geoLabel.textColor = AppColors.menuColor
+        findYourLookToday.translatesAutoresizingMaskIntoConstraints = false
+        findYourLookToday.image = UIImage(resource: .looktoday)
+        findYourLookToday.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        findYourLookToday.isUserInteractionEnabled = true
         
-        NSLayoutConstraint.activate([
-            geoLabel.centerYAnchor.constraint(equalTo: geoMarkImage.centerYAnchor, constant: 0),
-            geoLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            geoLabel.leftAnchor.constraint(equalTo: geoMarkImage.rightAnchor, constant: 30),
-            geoLabel.heightAnchor.constraint(equalToConstant: 16)
-        ])
-    }
-    
-    func setupSmallHCollection() {
-        contentView.addSubview(smallHCollection)
-        
-        smallHCollection.translatesAutoresizingMaskIntoConstraints = false
-//        smallHCollection.backgroundColor = .red
-        smallHCollection.delegate = self
-        smallHCollection.dataSource = self
-        smallHCollection.register(SmallHCViewCell.self, forCellWithReuseIdentifier: "SmallHCViewCell")
-        
-        
-        NSLayoutConstraint.activate([
-            smallHCollection.topAnchor.constraint(equalTo: geoMarkImage.topAnchor, constant: 70),
-            smallHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            smallHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            smallHCollection.heightAnchor.constraint(equalToConstant: 90),
-        ])
-    }
-    
-    func setupBigHCollection() {
-        contentView.addSubview(bigHCollection)
-        
-        bigHCollection.translatesAutoresizingMaskIntoConstraints = false
-        bigHCollection.delegate = self
-        bigHCollection.dataSource = self
-        bigHCollection.register(BigHCViewCell.self, forCellWithReuseIdentifier: "BigHCViewCell")
-        
-        
-        NSLayoutConstraint.activate([
-            bigHCollection.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 70),
-            bigHCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            bigHCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            bigHCollection.heightAnchor.constraint(equalToConstant: 130*2+20),
-        ])
-    }
-    func configureCategoryCollectionTitle() {
-        contentView.addSubview(categoryHCollectionTitle)
-        categoryHCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
-//        categoryHCollectionTitle.text = "Ctalog"
-        
-        NSLayoutConstraint.activate([
-            categoryHCollectionTitle.topAnchor.constraint(equalTo: smallHCollection.bottomAnchor, constant: 45),
-            categoryHCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            categoryHCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
-            categoryHCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
-        ])
-    }
-    func configureRecommendationVCollectionTitle() {
-        contentView.addSubview(recommendationVCollectionTitle)
-        recommendationVCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
-//        categoryHCollectionTitle.text = "Ctalog"
-        
-        NSLayoutConstraint.activate([
-            recommendationVCollectionTitle.topAnchor.constraint(equalTo: bigHCollection.bottomAnchor, constant: 30),
-            recommendationVCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            recommendationVCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
-            recommendationVCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
-        ])
-    }
-    func setupBigVCollection() {
-        contentView.addSubview(bigVCollection)
-        
-        bigVCollection.translatesAutoresizingMaskIntoConstraints = false
-        bigVCollection.delegate = self
-        bigVCollection.dataSource = self
-        bigVCollection.register(BigVCViewCell.self, forCellWithReuseIdentifier: "BigVCViewCell")
-        
-        
-        NSLayoutConstraint.activate([
-            bigVCollection.topAnchor.constraint(equalTo: recommendationVCollectionTitle.bottomAnchor, constant: 26),
-            bigVCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            bigVCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            bigVCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(findYourLookTodayTapped))
+        findYourLookToday.addGestureRecognizer(tapGesture)
+        print("Adding tap gesture to findYourLookToady")
 
-        ])
+        NSLayoutConstraint.activate([
+            findYourLookToday.topAnchor.constraint(equalTo: findLookLabel.bottomAnchor, constant: 8),
+            findYourLookToday.widthAnchor.constraint(equalToConstant: 250),
+            findYourLookToday.heightAnchor.constraint(equalToConstant: 300),
+            findYourLookToday.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            findYourLookToday.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
+            ])
+        
     }
-    func calculateContentSize() {
-        var totalHeight: CGFloat = 300 + 50 + 50 + 22 + 22 + 30 + 30 + 30 + smallHCollection.bounds.height + bigHCollection.bounds.height
-        
-        for index in 0..<bigVCollection.numberOfItems(inSection: 0) {
-            let indexPath = IndexPath(item: index, section: 0)
-            let cellHeight = collectionView(bigVCollection, layout: bigVCollection.collectionViewLayout, sizeForItemAt: indexPath).height
-            totalHeight += cellHeight
-        }
-        
-        let spasing = CGFloat(bigVCollection.numberOfItems(inSection: 0) - 1) * 30
-        
-        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spasing).isActive = true
+    @objc func findYourLookTodayTapped() {
+        print("Find Your Look button tapped!")
     }
-}
 
-//MARK: - CollectionView delegate
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch collectionView.tag {
-        case 1:
-            return 6
-        case 2:
-            return 10
-        case 3:
-            return 8
-        default:
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch collectionView.tag {
-        case 1:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SmallHCViewCell", for: indexPath)
-                return cell
-        case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BigHCViewCell", for: indexPath)
-                return cell
-        case 3:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BigVCViewCell", for: indexPath)
-                return cell
-        default:
-            return UICollectionViewCell()
-        }
-    }
-}
-
-extension HomeViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch collectionView.tag {
-        case 1:
-            return CGSize(width: 70, height: 91)
-        case 2:
-            return CGSize(width: 130, height: 130)
-        case 3:
-            let width = collectionView.bounds.width
-            let height = 130.0
-            return CGSize(width: width, height: height)
-        default :
-            return CGSize(width: 0, height: 0)
-        }
-    }
 }

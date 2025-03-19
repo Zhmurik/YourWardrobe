@@ -61,6 +61,7 @@ class WRButton: UIView {
         }
             
     private func setColorScheme(scheme: WRButtonColorScemes) {
+        print("Updating color scheme to: \(scheme)") 
         switch scheme {
         case .white:
             button.backgroundColor = AppColors.background
