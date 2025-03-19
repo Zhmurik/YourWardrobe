@@ -54,5 +54,10 @@ class ReccomOutfitViewCell: UICollectionViewCell {
             titleLabel.leftAnchor.constraint(equalTo: topView.leftAnchor, constant: 15),
         ])
     }
+    
+    func configure(with title: String, color: UIColor) {
+        titleLabel.text = title
+        topView.backgroundColor = color
+    }
 
 }

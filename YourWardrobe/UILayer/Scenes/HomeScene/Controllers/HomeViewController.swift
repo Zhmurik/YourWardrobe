@@ -148,8 +148,8 @@ extension HomeViewController {
         contentView.addSubview(findYourLookToday)
         
         findYourLookToday.translatesAutoresizingMaskIntoConstraints = false
-        findYourLookToday.image = UIImage(resource: .looktoday)
-        findYourLookToday.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        findYourLookToday.image = UIImage(resource: .yourlook)
+        findYourLookToday.transform = CGAffineTransform(rotationAngle: 3 * .pi / 2)
         findYourLookToday.isUserInteractionEnabled = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(findYourLookTodayTapped))
@@ -157,16 +157,16 @@ extension HomeViewController {
         print("Adding tap gesture to findYourLookToady")
 
         NSLayoutConstraint.activate([
-            findYourLookToday.topAnchor.constraint(equalTo: findLookLabel.bottomAnchor, constant: 8),
+            findYourLookToday.topAnchor.constraint(equalTo: findLookLabel.bottomAnchor),
             findYourLookToday.widthAnchor.constraint(equalToConstant: 250),
             findYourLookToday.heightAnchor.constraint(equalToConstant: 300),
             findYourLookToday.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             findYourLookToday.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
             ])
-        
     }
     @objc func findYourLookTodayTapped() {
         print("Find Your Look button tapped!")
     }
 
+    
 }

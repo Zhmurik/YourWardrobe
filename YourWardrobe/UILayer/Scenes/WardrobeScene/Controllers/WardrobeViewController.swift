@@ -25,6 +25,8 @@ class WardrobeViewController: UIViewController {
     private let recomendCollectionTitle = WRCollectionTitle(title: "Recommended Outfit")
     private let geoLabel = UILabel()
     
+    private let recommendedOutfitView = RecommendedOutfitCollectionView()
+    
     // MARK: - Collection main icons
     lazy var categoryCollection: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -50,19 +52,6 @@ class WardrobeViewController: UIViewController {
         collection.tag = 2
         return collection
     }()
-    lazy var reccomendedOutfitCollection: UICollectionView = {
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 20
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.isScrollEnabled = false
-        collection.tag = 3
-        return collection
-    }()
     
     // MARK: - Initializers
     init(presenter: WardrobePresenterProtocol) {
@@ -78,6 +67,7 @@ class WardrobeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
+        recommendedOutfitView.collectionView.reloadData()
         setupLayout()
     }
 }
@@ -230,36 +220,34 @@ extension WardrobeViewController {
             recomendCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
         ])
     }
+
     func setupRecommendCollection() {
-        contentView.addSubview(reccomendedOutfitCollection)
+        print("Collection setup")
+        contentView.addSubview(recommendedOutfitView)
         
-        reccomendedOutfitCollection.translatesAutoresizingMaskIntoConstraints = false
-        reccomendedOutfitCollection.backgroundColor = .clear
-        reccomendedOutfitCollection.delegate = self
-        reccomendedOutfitCollection.dataSource = self
-        reccomendedOutfitCollection.register(ReccomOutfitViewCell.self, forCellWithReuseIdentifier: "ReccomOutfitViewCell")
-        
+        recommendedOutfitView.translatesAutoresizingMaskIntoConstraints = false
+        recommendedOutfitView.configure(delegate: self, dataSource: self)
         
         NSLayoutConstraint.activate([
-            reccomendedOutfitCollection.topAnchor.constraint(equalTo: recomendCollectionTitle.bottomAnchor, constant: 26),
-            reccomendedOutfitCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            reccomendedOutfitCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            reccomendedOutfitCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-
+            recommendedOutfitView.topAnchor.constraint(equalTo: recomendCollectionTitle.bottomAnchor, constant: 26),
+            recommendedOutfitView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            recommendedOutfitView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            recommendedOutfitView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
+
     func calculateContentSize() {
         var totalHeight: CGFloat = 300 + 50 + 50 + 22 + 22 + 30 + 30 + 30 + categoryCollection.bounds.height + subCategoryCollection.bounds.height
         
-        for index in 0..<subCategoryCollection.numberOfItems(inSection: 0) {
+        for index in 0..<recommendedOutfitView.collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: index, section: 0)
-            let cellHeight = collectionView(reccomendedOutfitCollection, layout: reccomendedOutfitCollection.collectionViewLayout, sizeForItemAt: indexPath).height
+            let cellHeight = collectionView(recommendedOutfitView.collectionView, layout: recommendedOutfitView.collectionView.collectionViewLayout, sizeForItemAt: indexPath).height
             totalHeight += cellHeight
         }
         
-        let spasing = CGFloat(reccomendedOutfitCollection.numberOfItems(inSection: 0) - 1) * 30
+        let spacing = CGFloat(recommendedOutfitView.collectionView.numberOfItems(inSection: 0) - 1) * 30
         
-        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spasing).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spacing).isActive = true
     }
 }
 
