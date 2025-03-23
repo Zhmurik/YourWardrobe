@@ -44,7 +44,6 @@ private extension WRCollectionTitle {
         collectionTitle.translatesAutoresizingMaskIntoConstraints = false
         collectionTitle.backgroundColor = .clear
         collectionTitle.font = UIFont.Oswald.Bold.size(size: 18)
-//        collectionTitle.text = "Category"
             
         NSLayoutConstraint.activate([
             collectionTitle.centerYAnchor.constraint(equalTo: self.centerYAnchor),

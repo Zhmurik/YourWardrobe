@@ -9,6 +9,7 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    
     // MARK: - UI Elements
     private let contentView = UIView()
     private let scrollView = UIScrollView()
@@ -19,27 +20,13 @@ class HomeViewController: UIViewController {
     private let findYourLookToday = UIImageView()
     
     private let recommendedTitle = WRCollectionTitle(title: "Recommended Outfit")
-    private var recommendedCollection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 15
-        layout.minimumInteritemSpacing = 40
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
-        return collection
-    }()
+    private let recommededOutfitViewCollection = RecommendedOutfitCollectionView(scrollingDirection: .horizontal)
+    
     private let weatherIcon = UIImageView()
     private let weatherLabel = UILabel()
     
     // MARK: - Initializers
     init() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 15
-        self.recommendedCollection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -51,6 +38,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
+        
         setupLayout()
         view.layoutIfNeeded()
     }
@@ -66,6 +54,8 @@ extension HomeViewController {
         setupNameLabel()
         setupFindYourLookLabel()
         setupFindYourLookButton()
+//        setupReccomendedTitle()
+        setupRecommendedSection()
     }
     
     func  setupView() {
@@ -167,6 +157,40 @@ extension HomeViewController {
     @objc func findYourLookTodayTapped() {
         print("Find Your Look button tapped!")
     }
+//    func setupReccomendedTitle() {
+//        contentView.addSubview(recommendedTitle)
+//        recommendedTitle.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            recommendedTitle.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 20),
+//            recommendedTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+//            recommendedTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+//        ])
+//    }
+    func setupRecommendedSection() {
+        recommendedTitle.translatesAutoresizingMaskIntoConstraints = false
+        recommededOutfitViewCollection.translatesAutoresizingMaskIntoConstraints = false
 
-    
+        contentView.addSubview(recommendedTitle)
+        contentView.addSubview(recommededOutfitViewCollection)
+
+        NSLayoutConstraint.activate([
+            recommendedTitle.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 32),
+            recommendedTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            recommendedTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+
+            recommededOutfitViewCollection.topAnchor.constraint(equalTo: recommendedTitle.bottomAnchor, constant: 16),
+            recommededOutfitViewCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            recommededOutfitViewCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            recommededOutfitViewCollection.heightAnchor.constraint(equalToConstant: 130),
+
+            recommededOutfitViewCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -32)
+        ])
+
+        recommededOutfitViewCollection.setItems([
+            "Outfit 1", "Outfit 2", "Outfit 3",
+            "Outfit 4", "Outfit 5", "Outfit 6",
+            "Outfit 7", "Outfit 8", "Outfit 9"
+        ])
+    }
 }

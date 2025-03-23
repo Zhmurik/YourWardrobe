@@ -9,6 +9,10 @@ import UIKit
 
 class TabBarController: UITabBarController {
     
+    var actualTabBarHeight: CGFloat {
+        return tabBar.frame.height
+    }
+    
     init(tabBarControllers: [UIViewController]) {
         super.init(nibName: nil, bundle: nil)
         for tab in tabBarControllers {

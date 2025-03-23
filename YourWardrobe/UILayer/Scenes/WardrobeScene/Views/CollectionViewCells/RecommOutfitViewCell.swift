@@ -1,5 +1,5 @@
 //
-//  ReccomOutfitViewCells.swift
+//  RecommOutfitViewCells.swift
 //  YourWardrobe
 //
 //  Created by Anna Zhmurkova on 3/14/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ReccomOutfitViewCell: UICollectionViewCell {
+class RecommOutfitViewCell: UICollectionViewCell {
     
     let topView = UIView()
     let titleLabel = UILabel()
@@ -55,9 +55,9 @@ class ReccomOutfitViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with title: String, color: UIColor) {
+    func configure(with title: String/*, color: UIColor*/) {
         titleLabel.text = title
-        topView.backgroundColor = color
+//        topView.backgroundColor = color
     }
 
 }

@@ -25,7 +25,7 @@ class WardrobeViewController: UIViewController {
     private let recomendCollectionTitle = WRCollectionTitle(title: "Recommended Outfit")
     private let geoLabel = UILabel()
     
-    private let recommendedOutfitView = RecommendedOutfitCollectionView()
+    private let recommendedOutfitView = RecommendedOutfitCollectionView(scrollingDirection: .vertical)
     
     // MARK: - Collection main icons
     lazy var categoryCollection: UICollectionView = {
@@ -68,6 +68,7 @@ class WardrobeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
         recommendedOutfitView.collectionView.reloadData()
+        
         setupLayout()
     }
 }
@@ -205,7 +206,7 @@ extension WardrobeViewController {
         NSLayoutConstraint.activate([
             subCategoryCollectionTitle.topAnchor.constraint(equalTo: categoryCollection.bottomAnchor, constant: 45),
             subCategoryCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            subCategoryCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
+            subCategoryCollectionTitle.heightAnchor.constraint(equalToConstant: 22),
             subCategoryCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
         ])
     }
@@ -216,24 +217,36 @@ extension WardrobeViewController {
         NSLayoutConstraint.activate([
             recomendCollectionTitle.topAnchor.constraint(equalTo: subCategoryCollection.bottomAnchor, constant: 30),
             recomendCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            recomendCollectionTitle.heightAnchor.constraint(equalToConstant: -22),
+            recomendCollectionTitle.heightAnchor.constraint(equalToConstant: 22),
             recomendCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
         ])
     }
 
     func setupRecommendCollection() {
-        print("Collection setup")
         contentView.addSubview(recommendedOutfitView)
-        
+
         recommendedOutfitView.translatesAutoresizingMaskIntoConstraints = false
-        recommendedOutfitView.configure(delegate: self, dataSource: self)
-        
         NSLayoutConstraint.activate([
             recommendedOutfitView.topAnchor.constraint(equalTo: recomendCollectionTitle.bottomAnchor, constant: 26),
             recommendedOutfitView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            recommendedOutfitView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            recommendedOutfitView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            recommendedOutfitView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
         ])
+
+        recommendedOutfitView.setItems([
+            "Outfit 1", "Outfit 2", "Outfit 3",
+            "Outfit 4", "Outfit 5", "Outfit 6"
+        ])
+
+        DispatchQueue.main.async {
+            let tabBarHeight = self.tabBarController?.tabBar.frame.height ?? 49
+            let bottomInset: CGFloat = tabBarHeight + 16
+            let height = self.recommendedOutfitView.requiredHeight() + bottomInset
+                
+            NSLayoutConstraint.activate([
+                self.recommendedOutfitView.heightAnchor.constraint(equalToConstant: height)
+            ])
+            self.recommendedOutfitView.setBottomInset(bottomInset)
+        }
     }
 
     func calculateContentSize() {
@@ -246,8 +259,10 @@ extension WardrobeViewController {
         }
         
         let spacing = CGFloat(recommendedOutfitView.collectionView.numberOfItems(inSection: 0) - 1) * 30
+        let tabBarHeight = tabBarController?.tabBar.frame.height ?? 49
+        let bottomPadding: CGFloat = tabBarHeight + 16
         
-        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spacing).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: totalHeight + spacing + bottomPadding).isActive = true
     }
 }
 
@@ -260,8 +275,8 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
             return presenter.maincategoryData.count
         case 2:
             return 10
-        case 3:
-            return 8
+//        case 3:
+//            return 8
         default:
             return 0
         }
@@ -279,8 +294,8 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
             return cell ?? UICollectionViewCell()
         case 2:
             return collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath)
-        case 3:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
+//        case 3:
+//            return collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
         default:
             return UICollectionViewCell()
         }
@@ -299,8 +314,8 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
             
         case 2:
             print("Subcategory selected")
-        case 3:
-            print("Recommended outfit selected")
+//        case 3:
+//            print("Recommended outfit selected")
         default:
             print("Unknown selection")
         }
