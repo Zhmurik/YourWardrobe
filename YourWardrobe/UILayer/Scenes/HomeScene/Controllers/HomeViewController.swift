@@ -22,8 +22,7 @@ class HomeViewController: UIViewController {
     private let recommendedTitle = WRCollectionTitle(title: "Recommended Outfit")
     private let recommededOutfitViewCollection = RecommendedOutfitCollectionView(scrollingDirection: .horizontal)
     
-    private let weatherIcon = UIImageView()
-    private let weatherLabel = UILabel()
+    private let weatherView = WeatherView()
     
     // MARK: - Initializers
     init() {
@@ -54,7 +53,7 @@ extension HomeViewController {
         setupNameLabel()
         setupFindYourLookLabel()
         setupFindYourLookButton()
-//        setupReccomendedTitle()
+        setupWeather()
         setupRecommendedSection()
     }
     
@@ -66,15 +65,9 @@ extension HomeViewController {
         scrollView.showsVerticalScrollIndicator = true
         scrollView.alwaysBounceVertical = true
         scrollView.backgroundColor = .clear
-        
-//        scrollView.delaysContentTouches = false
-        
     }
     func configureContentView() {
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        
-//        contentView.isUserInteractionEnabled = false
-
     }
     func prepareScrollView() {
         view.addSubview(scrollView)
@@ -112,7 +105,7 @@ extension HomeViewController {
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
         userNameLabel.text = "John Doe"
         userNameLabel.font = UIFont.Oswald.Regular.size(size: 16)
-        userNameLabel.textColor = AppColors.menuColor
+        userNameLabel.textColor = AppColors.textPrimary.withAlphaComponent(0.8)
         
         NSLayoutConstraint.activate([
             userNameLabel.centerYAnchor.constraint(equalTo: profileIcon.centerYAnchor, constant: 0),
@@ -126,8 +119,8 @@ extension HomeViewController {
         contentView.addSubview(findLookLabel)
         findLookLabel.translatesAutoresizingMaskIntoConstraints = false
         findLookLabel.text = "Find your look"
-        findLookLabel.font = UIFont.Oswald.Regular.size(size: 24)
-        findLookLabel.textColor = AppColors.menuColor
+        findLookLabel.font = UIFont.Oswald.Bold.size(size: 22)
+        findLookLabel.textColor = AppColors.textPrimary
         
         NSLayoutConstraint.activate([
             findLookLabel.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 100),
@@ -157,31 +150,35 @@ extension HomeViewController {
     @objc func findYourLookTodayTapped() {
         print("Find Your Look button tapped!")
     }
-//    func setupReccomendedTitle() {
-//        contentView.addSubview(recommendedTitle)
-//        recommendedTitle.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            recommendedTitle.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 20),
-//            recommendedTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-//            recommendedTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
-//        ])
-//    }
+
+    func setupWeather() {
+        contentView.addSubview(weatherView)
+        
+        weatherView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            weatherView.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 5),
+            weatherView.widthAnchor.constraint(equalToConstant: 300),
+            weatherView.heightAnchor.constraint(equalToConstant: 50),
+            weatherView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+        ])
+    }
     func setupRecommendedSection() {
         recommendedTitle.translatesAutoresizingMaskIntoConstraints = false
         recommededOutfitViewCollection.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.addSubview(recommendedTitle)
         contentView.addSubview(recommededOutfitViewCollection)
+        
 
         NSLayoutConstraint.activate([
-            recommendedTitle.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 32),
-            recommendedTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            recommendedTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            recommendedTitle.topAnchor.constraint(equalTo: weatherView.bottomAnchor, constant: 32),
+            recommendedTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            recommendedTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
 
             recommededOutfitViewCollection.topAnchor.constraint(equalTo: recommendedTitle.bottomAnchor, constant: 16),
-            recommededOutfitViewCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            recommededOutfitViewCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            recommededOutfitViewCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            recommededOutfitViewCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             recommededOutfitViewCollection.heightAnchor.constraint(equalToConstant: 130),
 
             recommededOutfitViewCollection.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -32)

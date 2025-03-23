@@ -43,6 +43,7 @@ private extension WRCollectionTitle {
             
         collectionTitle.translatesAutoresizingMaskIntoConstraints = false
         collectionTitle.backgroundColor = .clear
+        collectionTitle.textColor = AppColors.textPrimary
         collectionTitle.font = UIFont.Oswald.Bold.size(size: 18)
             
         NSLayoutConstraint.activate([
