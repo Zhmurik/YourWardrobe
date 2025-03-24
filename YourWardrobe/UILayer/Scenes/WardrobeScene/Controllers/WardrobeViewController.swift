@@ -16,14 +16,16 @@ class WardrobeViewController: UIViewController {
     // MARK: - Views
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    
+    private let weatherView = WeatherView()
+    private let locationView = LocationGeoView()
+    
     private let searchBar = WRSearchField()
-    private let geoMarkImage = UIImageView()
     
     var selectedCategoryIndex: IndexPath?
     
     private let subCategoryCollectionTitle = WRCollectionTitle(title: "Category")
     private let recomendCollectionTitle = WRCollectionTitle(title: "Recommended Outfit")
-    private let geoLabel = UILabel()
     
     private let recommendedOutfitView = RecommendedOutfitCollectionView(scrollingDirection: .vertical)
     
@@ -80,8 +82,7 @@ extension WardrobeViewController {
         configureContentView()
         prepareScrollView()
         configureSearchBar()
-        configureGeoMark()
-        configureGeoLabel()
+        configureWeatherAndLocation()
         setupView()
         setupCategoryCollection()
         configureCategoryCollectionTitle()
@@ -132,34 +133,33 @@ extension WardrobeViewController {
             searchBar.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
-    func configureGeoMark() {
-        contentView.addSubview(geoMarkImage)
-        
-        geoMarkImage.image = UIImage(resource: .lacationMark)
-        
-        geoMarkImage.translatesAutoresizingMaskIntoConstraints = false
+    
+    func configureWeatherAndLocation() {
+        let stackView = UIStackView(arrangedSubviews: [locationView, weatherView])
+        stackView.axis = .horizontal
+        stackView.spacing = 20
+        stackView.alignment = .center
+        stackView.distribution = .fill
+
+        contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            geoMarkImage.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
-            geoMarkImage.widthAnchor.constraint(equalToConstant: 14),
-            geoMarkImage.heightAnchor.constraint(equalToConstant: 20),
-            geoMarkImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30)
+            stackView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
+            stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
+            stackView.heightAnchor.constraint(equalToConstant: 50)
         ])
-    }
-    func configureGeoLabel() {
-        contentView.addSubview(geoLabel)
-        
-        geoLabel.text = "Evelyn, Sunnyvale, CA"
-        geoLabel.translatesAutoresizingMaskIntoConstraints = false
-        geoLabel.numberOfLines = 0
-        geoLabel.font = UIFont.Oswald.Regular.size(size: 12)
-        geoLabel.textColor = AppColors.menuColor
-        
+
+        weatherView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            geoLabel.centerYAnchor.constraint(equalTo: geoMarkImage.centerYAnchor, constant: 0),
-            geoLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            geoLabel.leftAnchor.constraint(equalTo: geoMarkImage.rightAnchor, constant: 30),
-            geoLabel.heightAnchor.constraint(equalToConstant: 16)
+            weatherView.widthAnchor.constraint(equalToConstant: 70),
+            weatherView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        locationView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            locationView.widthAnchor.constraint(equalToConstant: 200),
+            locationView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -174,7 +174,7 @@ extension WardrobeViewController {
         categoryCollection.showsHorizontalScrollIndicator = false
         
         NSLayoutConstraint.activate([
-            categoryCollection.topAnchor.constraint(equalTo: geoMarkImage.topAnchor, constant: 70),
+            categoryCollection.topAnchor.constraint(equalTo: locationView.topAnchor, constant: 70),
             categoryCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             categoryCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             categoryCollection.heightAnchor.constraint(equalToConstant: 90),

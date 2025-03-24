@@ -14,7 +14,7 @@ class WeatherView: UIView {
     private let weatherImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "thermometer.sun")
-        imageView.tintColor = AppColors.testColor2
+        imageView.tintColor = AppColors.menuColor
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

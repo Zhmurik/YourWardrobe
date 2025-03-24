@@ -13,7 +13,7 @@ class LocationGeoView: UIView {
         imageView.image = UIImage(systemName: "location.fill")
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = AppColors.testColor2
+        imageView.tintColor = AppColors.menuColor
         
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 24),
@@ -25,7 +25,7 @@ class LocationGeoView: UIView {
     private let locationLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.Oswald.Regular.size(size: 14)
-        label.textColor = AppColors.testColor2
+        label.textColor = AppColors.textPrimary
         label.numberOfLines = 0
         label.text = "Evelyn, Sunnyvale, CA"
         return label
