@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
     private let recommededOutfitViewCollection = RecommendedOutfitCollectionView(scrollingDirection: .horizontal)
     
     private let weatherView = WeatherView()
+    private let locationView = LocationGeoView()
     
     // MARK: - Initializers
     init() {
@@ -53,7 +54,7 @@ extension HomeViewController {
         setupNameLabel()
         setupFindYourLookLabel()
         setupFindYourLookButton()
-        setupWeather()
+        setupWeatherAndLocation()
         setupRecommendedSection()
     }
     
@@ -151,18 +152,36 @@ extension HomeViewController {
         print("Find Your Look button tapped!")
     }
 
-    func setupWeather() {
-        contentView.addSubview(weatherView)
-        
-        weatherView.translatesAutoresizingMaskIntoConstraints = false
+    func setupWeatherAndLocation() {
+        let stackView = UIStackView(arrangedSubviews: [locationView, weatherView])
+        stackView.axis = .horizontal
+        stackView.spacing = 20
+        stackView.alignment = .center
+        stackView.distribution = .fill
+
+        contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            weatherView.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 5),
-            weatherView.widthAnchor.constraint(equalToConstant: 300),
-            weatherView.heightAnchor.constraint(equalToConstant: 50),
-            weatherView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            stackView.topAnchor.constraint(equalTo: findYourLookToday.bottomAnchor, constant: 5),
+            stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
+            stackView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+
+        weatherView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            weatherView.widthAnchor.constraint(equalToConstant: 70),
+            weatherView.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        locationView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            locationView.widthAnchor.constraint(equalToConstant: 200),
+            locationView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+
+    
     func setupRecommendedSection() {
         recommendedTitle.translatesAutoresizingMaskIntoConstraints = false
         recommededOutfitViewCollection.translatesAutoresizingMaskIntoConstraints = false
