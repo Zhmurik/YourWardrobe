@@ -7,18 +7,18 @@
 import Foundation
 
 protocol WardrobePresenterProtocol: AnyObject {
-    var maincategoryData: [WardrobeMainCategory] { get }
+    var maincategoryData: [ClosingMainCategory] { get }
 //    var subcategoryData: [WardrobeSubCategory] { get }
 //    var recommendedOutfitData: [RecommendedOutfit] { get }
-    func getSelectedCategory() -> WardrobeMainCategory
+    func getSelectedCategory() -> ClosingMainCategory
 }
 
 
 class WardrobePresenter:WardrobePresenterProtocol {
-    
+
     // MARK: - Properties
     let coordinator: WardrobeCoordinator
-    var maincategoryData = [WardrobeMainCategory]()
+    var maincategoryData = [ClosingMainCategory]()
     
     // MARK: - Initializers
     init(coordinator: WardrobeCoordinator) {
@@ -27,7 +27,7 @@ class WardrobePresenter:WardrobePresenterProtocol {
     }
     
     // MARK: - Methods
-    func getSelectedCategory() -> WardrobeMainCategory {
+    func getSelectedCategory() -> ClosingMainCategory {
         return .clothes
     }
     

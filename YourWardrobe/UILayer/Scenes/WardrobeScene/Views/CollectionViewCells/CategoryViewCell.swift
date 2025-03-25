@@ -23,7 +23,7 @@ class CategoryViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with category: WardrobeMainCategory, isSelected: Bool) {
+    func configure(with category: ClosingMainCategory, isSelected: Bool) {
         
         bottomLabel.text = category.rawValue
         updateSelectionState(isSelected)
