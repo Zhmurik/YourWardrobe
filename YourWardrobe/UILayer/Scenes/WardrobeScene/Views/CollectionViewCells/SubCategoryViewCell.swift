@@ -10,6 +10,7 @@ import UIKit
 class SubCategoryViewCell: UICollectionViewCell {
     
     let topView = UIView()
+    let imageView = UIImageView()
     let titleLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -20,9 +21,15 @@ class SubCategoryViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configure(with subcategory: ClosingSubCategory) {
+        imageView.image = subcategory.image
+        titleLabel.text = subcategory.rawValue
+    }
+    
     func setupCell() {
 //        contentView.backgroundColor = AppColors.testColor1
         setupTopView()
+        setupImageView()
         setupBottomLabel()
     }
     
@@ -37,8 +44,20 @@ class SubCategoryViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             topView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             topView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            topView.widthAnchor.constraint(equalToConstant: 130),
-            topView.heightAnchor.constraint(equalToConstant: 130),
+            topView.widthAnchor.constraint(equalToConstant: 100),
+            topView.heightAnchor.constraint(equalToConstant: 100),
+        ])
+    }
+    func setupImageView() {
+        topView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        
+        NSLayoutConstraint.activate([
+            
+            imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
     func setupBottomLabel() {
@@ -50,7 +69,7 @@ class SubCategoryViewCell: UICollectionViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topView.topAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 10),
             titleLabel.leftAnchor.constraint(equalTo: topView.leftAnchor, constant: 15),
         ])
     }

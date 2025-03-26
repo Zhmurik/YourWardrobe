@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "scBackpack.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

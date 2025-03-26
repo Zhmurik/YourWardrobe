@@ -13,7 +13,11 @@ class CategoryViewCell: UICollectionViewCell {
     let bottomLabel = UILabel()
     let imageViewCategory = UIImageView()
     
-    var isCategorySelected = false
+    override var isSelected: Bool {
+        didSet {
+            updateSelectionState(isSelected)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,31 +28,15 @@ class CategoryViewCell: UICollectionViewCell {
     }
     
     func configure(with category: ClosingMainCategory, isSelected: Bool) {
-        
+        imageViewCategory.image = category.image
         bottomLabel.text = category.rawValue
         updateSelectionState(isSelected)
-        
-        switch category {
-        case .clothes:
-            print(category)
-            imageViewCategory.image = UIImage(resource: .wrClothes).withTintColor(.black)
-        case .shoes:
-            imageViewCategory.image = UIImage(resource: .wrShoes).withTintColor(.black)
-            print(category)
-        case .accessories:
-            imageViewCategory.image = UIImage(resource: .wrAccessories).withTintColor(.black)
-            print(category)
-        case .bags:
-            imageViewCategory.image = UIImage(resource: .wrBags).withTintColor(.black)
-            print(category)
-        case .seasonal:
-            imageViewCategory.image = UIImage(resource: .wrSeasonal).withTintColor(.black)
-            print(category)
-        }
     }
+
     
     func updateSelectionState(_ isSelected: Bool) {
         topView.backgroundColor = isSelected ? AppColors.accentColor : .clear
+        topView.layer.borderColor = isSelected ? AppColors.accentColor.cgColor : AppColors.testColor1.cgColor
     }
     
     func setupCell() {

@@ -72,6 +72,12 @@ class WardrobeViewController: UIViewController {
         recommendedOutfitView.collectionView.reloadData()
         
         setupLayout()
+        
+        DispatchQueue.main.async {
+            let firstIndexPath = IndexPath(item: 0, section: 0)
+            self.categoryCollection.selectItem(at: firstIndexPath, animated: false, scrollPosition: .left)
+            self.collectionView(self.categoryCollection, didSelectItemAt: firstIndexPath)
+        }
     }
 }
 
@@ -274,7 +280,7 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
         case 1:
             return presenter.maincategoryData.count
         case 2:
-            return 10
+            return presenter.subcategoryData.count
 //        case 3:
 //            return 8
         default:
@@ -293,7 +299,12 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
             
             return cell ?? UICollectionViewCell()
         case 2:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath)
+            let subcategory = presenter.subcategoryData[indexPath.row]
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath) as? SubCategoryViewCell else {
+                return UICollectionViewCell()
+            }
+            cell.configure(with: subcategory)
+            return cell
 //        case 3:
 //            return collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
         default:
@@ -304,16 +315,14 @@ extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionView.tag {
         case 1:
-            if selectedCategoryIndex == indexPath {
-                selectedCategoryIndex = nil
-            } else {
-                selectedCategoryIndex = indexPath
-            }
+            selectedCategoryIndex = indexPath
+            let selectedCategory = presenter.maincategoryData[indexPath.row]
+            presenter.subcategoryData = presenter.getSubcategories(for: selectedCategory)
+            subCategoryCollection.reloadData()
+            categoryCollection.reloadData()
             
-            collectionView.reloadData()
-            
-        case 2:
-            print("Subcategory selected")
+//        case 2:
+//            print("Subcategory selected")
 //        case 3:
 //            print("Recommended outfit selected")
         default:
