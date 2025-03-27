@@ -17,15 +17,17 @@ class SubCategoryCollectionView: UIView {
     var subcategories: [ClosingSubCategory] = [] {
         didSet {
             collectionView.reloadData()
+            collectionView.collectionViewLayout.invalidateLayout()
         }
     }
     
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 5
         layout.headerReferenceSize = .zero
+
         return layout
     }()
     
@@ -80,6 +82,6 @@ extension SubCategoryCollectionView: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 130, height: 130)
+        return CGSize(width: 120, height: 130)
     }
 }

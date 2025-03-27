@@ -28,7 +28,8 @@ class WardrobePresenter:WardrobePresenterProtocol {
     init(coordinator: WardrobeCoordinator) {
         self.coordinator = coordinator
         getCategoryData()
-//        getSubcategoryData()
+        subcategoryData = getSubcategories(for: getSelectedCategory())
+
     }
     
     // MARK: - Methods

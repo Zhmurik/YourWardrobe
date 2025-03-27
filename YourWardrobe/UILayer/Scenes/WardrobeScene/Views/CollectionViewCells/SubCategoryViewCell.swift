@@ -69,8 +69,8 @@ class SubCategoryViewCell: UICollectionViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 10),
-            titleLabel.leftAnchor.constraint(equalTo: topView.leftAnchor, constant: 15),
+            titleLabel.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 5),
+            titleLabel.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
         ])
     }
 

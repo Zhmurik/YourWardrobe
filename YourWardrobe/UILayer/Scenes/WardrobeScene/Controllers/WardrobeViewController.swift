@@ -181,7 +181,7 @@ extension WardrobeViewController {
         subCategoryCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            subCategoryCollectionTitle.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 45),
+            subCategoryCollectionTitle.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 35),
             subCategoryCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             subCategoryCollectionTitle.heightAnchor.constraint(equalToConstant: 22),
             subCategoryCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
@@ -259,19 +259,19 @@ extension WardrobeViewController: CategoryCollectionViewDelegate, SubCategoryCol
 }
 
 
-//extension WardrobeViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        switch collectionView.tag {
-//        case 1:
-//            return CGSize(width: 70, height: 91)
-//        case 2:
-//            return CGSize(width: 130, height: 130)
-//        case 3:
-//            let width = collectionView.bounds.width
-//            let height = 130.0
-//            return CGSize(width: width, height: height)
-//        default :
-//            return CGSize(width: 0, height: 0)
-//        }
-//    }
-//}
+extension WardrobeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        switch collectionView.tag {
+        case 1:
+            return CGSize(width: 70, height: 91)
+        case 2:
+            return CGSize(width: 130, height: 130)
+        case 3:
+            let width = collectionView.bounds.width
+            let height = 130.0
+            return CGSize(width: width, height: height)
+        default :
+            return CGSize(width: 0, height: 0)
+        }
+    }
+}

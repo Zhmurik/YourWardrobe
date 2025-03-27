@@ -28,7 +28,7 @@ class CategoryCollectionView: UIView {
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 15
+        layout.minimumLineSpacing = 40
         layout.minimumInteritemSpacing = 40
         layout.headerReferenceSize = .zero
         return layout
@@ -86,6 +86,6 @@ extension CategoryCollectionView: UICollectionViewDelegate, UICollectionViewData
         delegate?.didSelectCategory(at: indexPath)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 70, height: 91)
+        return CGSize(width: 130, height: 91)
     }
 }
