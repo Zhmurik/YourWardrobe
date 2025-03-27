@@ -27,33 +27,10 @@ class WardrobeViewController: UIViewController {
     private let subCategoryCollectionTitle = WRCollectionTitle(title: "Category")
     private let recomendCollectionTitle = WRCollectionTitle(title: "Recommended Outfit")
     
-    private let recommendedOutfitView = RecommendedOutfitCollectionView(scrollingDirection: .vertical)
-    
     // MARK: - Collection main icons
-    lazy var categoryCollection: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 15
-        layout.minimumInteritemSpacing = 40
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.tag = 1
-
-        return collection
-    }()
-    lazy var subCategoryCollection: UICollectionView = {
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.headerReferenceSize = .zero
-        layout.minimumLineSpacing = 20
-        layout.minimumInteritemSpacing = 20
-        
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.tag = 2
-        return collection
-    }()
+    private let categoryCollectionView = CategoryCollectionView()
+    private let subCategoryCollectionView = SubCategoryCollectionView()
+    private let recommendedOutfitView = RecommendedOutfitCollectionView(scrollingDirection: .vertical)
     
     // MARK: - Initializers
     init(presenter: WardrobePresenterProtocol) {
@@ -70,14 +47,18 @@ class WardrobeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
         recommendedOutfitView.collectionView.reloadData()
+        categoryCollectionView.delegate = self
+        categoryCollectionView.categories = presenter.maincategoryData
+        categoryCollectionView.selectedIndex = IndexPath(item: 0, section: 0)
+
         
         setupLayout()
         
-        DispatchQueue.main.async {
-            let firstIndexPath = IndexPath(item: 0, section: 0)
-            self.categoryCollection.selectItem(at: firstIndexPath, animated: false, scrollPosition: .left)
-            self.collectionView(self.categoryCollection, didSelectItemAt: firstIndexPath)
-        }
+//        DispatchQueue.main.async {
+//            let firstIndexPath = IndexPath(item: 0, section: 0)
+//            self.categoryCollectionView.selectItem(at: firstIndexPath, animated: false, scrollPosition: .left)
+//            self.collectionView(self.categoryCollectionView, didSelectItemAt: firstIndexPath)
+//        }
     }
 }
 
@@ -91,7 +72,7 @@ extension WardrobeViewController {
         configureWeatherAndLocation()
         setupView()
         setupCategoryCollection()
-        configureCategoryCollectionTitle()
+        configureSubCategoryCollectionTitle()
         setupSubCategoryCollection()
         configureRecommendCollectionTitle()
         setupRecommendCollection()
@@ -170,47 +151,37 @@ extension WardrobeViewController {
     }
     
     func setupCategoryCollection() {
-        contentView.addSubview(categoryCollection)
-        
-        categoryCollection.translatesAutoresizingMaskIntoConstraints = false
-        categoryCollection.backgroundColor = .clear
-        categoryCollection.delegate = self
-        categoryCollection.dataSource = self
-        categoryCollection.register(CategoryViewCell.self, forCellWithReuseIdentifier: "CategoryViewCell")
-        categoryCollection.showsHorizontalScrollIndicator = false
-        
+        contentView.addSubview(categoryCollectionView)
+        categoryCollectionView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            categoryCollection.topAnchor.constraint(equalTo: locationView.topAnchor, constant: 70),
-            categoryCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            categoryCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            categoryCollection.heightAnchor.constraint(equalToConstant: 90),
+            categoryCollectionView.topAnchor.constraint(equalTo: locationView.topAnchor, constant: 70),
+            categoryCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            categoryCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            categoryCollectionView.heightAnchor.constraint(equalToConstant: 90)
         ])
     }
     
     func setupSubCategoryCollection() {
-        contentView.addSubview(subCategoryCollection)
-        
-        subCategoryCollection.translatesAutoresizingMaskIntoConstraints = false
-        subCategoryCollection.backgroundColor = .clear
-        subCategoryCollection.delegate = self
-        subCategoryCollection.dataSource = self
-        subCategoryCollection.register(SubCategoryViewCell.self, forCellWithReuseIdentifier: "SubCategoryViewCell")
-        subCategoryCollection.showsHorizontalScrollIndicator = false
-        
+        contentView.addSubview(subCategoryCollectionView)
+        subCategoryCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        subCategoryCollectionView.delegate = self
+        subCategoryCollectionView.subcategories = presenter.subcategoryData
         
         NSLayoutConstraint.activate([
-            subCategoryCollection.topAnchor.constraint(equalTo: categoryCollection.bottomAnchor, constant: 70),
-            subCategoryCollection.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            subCategoryCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            subCategoryCollection.heightAnchor.constraint(equalToConstant: 130*2+20),
+            subCategoryCollectionView.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 70),
+            subCategoryCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            subCategoryCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            subCategoryCollectionView.heightAnchor.constraint(equalToConstant: 130 * 2 + 20),
         ])
     }
-    func configureCategoryCollectionTitle() {
+
+    func configureSubCategoryCollectionTitle() {
         contentView.addSubview(subCategoryCollectionTitle)
         subCategoryCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            subCategoryCollectionTitle.topAnchor.constraint(equalTo: categoryCollection.bottomAnchor, constant: 45),
+            subCategoryCollectionTitle.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 45),
             subCategoryCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             subCategoryCollectionTitle.heightAnchor.constraint(equalToConstant: 22),
             subCategoryCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
@@ -221,7 +192,7 @@ extension WardrobeViewController {
         recomendCollectionTitle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            recomendCollectionTitle.topAnchor.constraint(equalTo: subCategoryCollection.bottomAnchor, constant: 30),
+            recomendCollectionTitle.topAnchor.constraint(equalTo: subCategoryCollectionView.bottomAnchor, constant: 30),
             recomendCollectionTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             recomendCollectionTitle.heightAnchor.constraint(equalToConstant: 22),
             recomendCollectionTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30)
@@ -256,7 +227,7 @@ extension WardrobeViewController {
     }
 
     func calculateContentSize() {
-        var totalHeight: CGFloat = 300 + 50 + 50 + 22 + 22 + 30 + 30 + 30 + categoryCollection.bounds.height + subCategoryCollection.bounds.height
+        var totalHeight: CGFloat = 300 + 50 + 50 + 22 + 22 + 30 + 30 + 30 + categoryCollectionView.bounds.height + subCategoryCollectionView.bounds.height
         
         for index in 0..<recommendedOutfitView.collectionView.numberOfItems(inSection: 0) {
             let indexPath = IndexPath(item: index, section: 0)
@@ -273,79 +244,34 @@ extension WardrobeViewController {
 }
 
 //MARK: - CollectionView delegate
-extension WardrobeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch collectionView.tag {
-        case 1:
-            return presenter.maincategoryData.count
-        case 2:
-            return presenter.subcategoryData.count
-//        case 3:
-//            return 8
-        default:
-            return 0
-        }
+extension WardrobeViewController: CategoryCollectionViewDelegate, SubCategoryCollectionViewDelegate {
+    func didSelectCategory(at indexPath: IndexPath) {
+        selectedCategoryIndex = indexPath
+        let selectedCategory = presenter.maincategoryData[indexPath.row]
+        presenter.subcategoryData = presenter.getSubcategories(for: selectedCategory)
+        subCategoryCollectionView.subcategories = presenter.subcategoryData
+        categoryCollectionView.selectedIndex = indexPath
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch collectionView.tag {
-        case 1:
-            let category = presenter.maincategoryData[indexPath.row]
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryViewCell", for: indexPath) as? CategoryViewCell
-            
-            let isSelected = (indexPath == selectedCategoryIndex)
-            cell?.configure(with: category, isSelected: isSelected)
-            
-            return cell ?? UICollectionViewCell()
-        case 2:
-            let subcategory = presenter.subcategoryData[indexPath.row]
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SubCategoryViewCell", for: indexPath) as? SubCategoryViewCell else {
-                return UICollectionViewCell()
-            }
-            cell.configure(with: subcategory)
-            return cell
-//        case 3:
-//            return collectionView.dequeueReusableCell(withReuseIdentifier: "ReccomOutfitViewCell", for: indexPath)
-        default:
-            return UICollectionViewCell()
-        }
+    func didSelectedSubcategory(at indexPath: IndexPath) {
+        print("Selected subcategory: \(presenter.subcategoryData[indexPath.row])")
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch collectionView.tag {
-        case 1:
-            selectedCategoryIndex = indexPath
-            let selectedCategory = presenter.maincategoryData[indexPath.row]
-            presenter.subcategoryData = presenter.getSubcategories(for: selectedCategory)
-            subCategoryCollection.reloadData()
-            categoryCollection.reloadData()
-            
+}
+
+
+//extension WardrobeViewController: UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        switch collectionView.tag {
+//        case 1:
+//            return CGSize(width: 70, height: 91)
 //        case 2:
-//            print("Subcategory selected")
+//            return CGSize(width: 130, height: 130)
 //        case 3:
-//            print("Recommended outfit selected")
-        default:
-            print("Unknown selection")
-        }
-    }
-}
-
-
-
-extension WardrobeViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch collectionView.tag {
-        case 1:
-            return CGSize(width: 70, height: 91)
-        case 2:
-            return CGSize(width: 130, height: 130)
-        case 3:
-            let width = collectionView.bounds.width
-            let height = 130.0
-            return CGSize(width: width, height: height)
-        default :
-            return CGSize(width: 0, height: 0)
-        }
-    }
-}
+//            let width = collectionView.bounds.width
+//            let height = 130.0
+//            return CGSize(width: width, height: height)
+//        default :
+//            return CGSize(width: 0, height: 0)
+//        }
+//    }
+//}
