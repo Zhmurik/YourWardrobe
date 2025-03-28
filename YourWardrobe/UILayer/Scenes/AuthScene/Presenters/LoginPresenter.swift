@@ -8,13 +8,13 @@
 import Foundation
 
 protocol LoginViewOutputProtocol: AnyObject {
-    func loginStart(login: String, password: String)
-    func registrationStart()
+    func loginStart(with credentials: AuthCredentials)
+    func registrationStart(with credentials: AuthCredentials, name: String)
     func goToFacebookLogin()
     func goToGmailLogin()
     func goToSignIn()
     func goToSignUp()
-    func goToFogotPassword()
+    func goToFogotPassword(with email: String)
     func back()
 }
 
@@ -36,27 +36,58 @@ private extension LoginPresenter {
 }
 
 extension LoginPresenter: LoginViewOutputProtocol {
-    func loginStart(login: String, password: String) {
+    func loginStart(with credentials: AuthCredentials) {
+        guard credentials.isValidForSignIn else {
+            viewInput?.stopLoader()
+            print("❌ Inccoorrect email or password")
+            return
+        }
+
         viewInput?.startLoader()
-        if login == "Test@gmail.com" && password == "123" {
-            DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) {
-                DispatchQueue.main.async {
+
+        Task {
+            do {
+                let user = try await AuthService.shared.signIn(credentials: credentials)
+                await MainActor.run {
                     self.viewInput?.stopLoader()
+                    print("✅ Congratulations: \(user.name)")
                     self.goToMainScreen()
                 }
-            }
-
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                print("wrong login or password")
-                self.viewInput?.stopLoader()
+            } catch {
+                await MainActor.run {
+                    self.viewInput?.stopLoader()
+                    print("❌ Error: \(error.localizedDescription)")
+                }
             }
         }
     }
-    
-    func registrationStart() {
-        
+
+    func registrationStart(with credentials: AuthCredentials, name: String) {
+        guard credentials.isValidForSignUp else {
+            print("❌ Incorrect registration data")
+            viewInput?.stopLoader()
+            return
+        }
+
+        viewInput?.startLoader()
+
+        Task {
+            do {
+                let user = try await AuthService.shared.register(credentials: credentials, name: name)
+                await MainActor.run {
+                    print("✅ Successfully registered: \(user.name)")
+                    viewInput?.stopLoader()
+                    goToMainScreen()
+                }
+            } catch {
+                await MainActor.run {
+                    print("❌ Registration failed: \(error.localizedDescription)")
+                    viewInput?.stopLoader()
+                }
+            }
+        }
     }
+
     func goToFacebookLogin() {
         
     }
@@ -69,9 +100,28 @@ extension LoginPresenter: LoginViewOutputProtocol {
     func goToSignUp() {
         coordinator?.showSignUpScene()
     }
-    func goToFogotPassword() {
-        
+    func goToFogotPassword(with email: String) {
+        guard !email.isEmpty else {
+            print("❌ Email can't be empty")
+            return
+        }
+
+        let credentials = AuthCredentials(email: email, password: "", reenteredPassword: nil)
+
+        Task {
+            do {
+                try await AuthService.shared.resetPassword(for: credentials)
+                await MainActor.run {
+                    print("✅ The reset link has been sent")
+                }
+            } catch {
+                await MainActor.run {
+                    print("❌ Password reset error: \(error.localizedDescription)")
+                }
+            }
+        }
     }
+
     func back() {
         
     }

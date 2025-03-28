@@ -19,6 +19,7 @@ class WardrobeViewController: UIViewController {
     
     private let weatherView = WeatherView()
     private let locationView = LocationGeoView()
+//    let weatherService = WeatherService()
     
     private let searchBar = WRSearchField()
     

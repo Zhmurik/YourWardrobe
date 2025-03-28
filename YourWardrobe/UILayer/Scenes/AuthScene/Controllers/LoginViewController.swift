@@ -19,7 +19,6 @@ protocol LoginViewInputProtocol: AnyObject {
 
 }
 
-
 class LoginViewController: UIViewController {
     
     // MARK: - Properties
@@ -71,7 +70,6 @@ class LoginViewController: UIViewController {
         setupObservers()
         
     }
-    
 
     func gmailPress() {
         print("Gmail")
@@ -115,7 +113,6 @@ private extension LoginViewController {
         }
         setupLoaderView()
     }
-    
     
     func setupNavigationBar() {
         let backImage = UIImage(resource: .backIcon)
@@ -301,12 +298,13 @@ private extension LoginViewController {
         forgotLabel.textColor = AppColors.textPrimary
         forgotLabel.font = .Oswald.ExtraLight.size(size: 14)
         forgotLabel.text = "Forgot Password?"
-        
+        forgotLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onForgotPasswordTapped))
+        forgotLabel.addGestureRecognizer(tapGesture)
+
         NSLayoutConstraint.activate([
             forgotLabel.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20),
             forgotLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
-            
-            
             
         ])
     }
@@ -385,8 +383,10 @@ private extension LoginViewController {
          case .initial:
              viewOutput.goToSignIn()
          case .signIn:
-             print(#function)
-             viewOutput.loginStart(login: signInUsername.text ?? "", password: signInPassword.text ?? "")
+             let credentials = AuthCredentials(email: signInUsername.text ?? "",
+                                               password: signInPassword.text ?? ""
+             )
+             viewOutput.loginStart(with: credentials)
          case .signUp:
              return
          }
@@ -399,7 +399,12 @@ private extension LoginViewController {
          case .signIn:
              return
          case .signUp:
-             return
+             let credentials = AuthCredentials(email: signUpUsername.text ?? "",
+                                               password: signUpPassword.text ?? "",
+                                               reenteredPassword: signUpReEnterPassword.text ?? ""
+             )
+             let name = signInUsername.text ?? ""
+             viewOutput.registrationStart(with: credentials, name: name)
          }
      }
      
@@ -411,8 +416,9 @@ private extension LoginViewController {
          
      }
      
-     func onForgotPasswordTapped() {
-         
+    @objc func onForgotPasswordTapped() {
+        let email = signInUsername.text ?? ""
+        viewOutput.goToFogotPassword(with: email)
      }
      
      

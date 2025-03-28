@@ -6,7 +6,15 @@
 //
 
 struct WeatherModel {
-    let temperature: Int
-    let description: String
-    let iconName: String
+    let main: Main
+    let weather: [Weather]
+    
+    struct Main {
+        let temp: Double
+    }
+    
+    struct Weather {
+        let icon: String
+        let description: String
+    }
 }
