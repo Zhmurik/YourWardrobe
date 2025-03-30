@@ -101,25 +101,7 @@ extension LoginPresenter: LoginViewOutputProtocol {
         coordinator?.showSignUpScene()
     }
     func goToFogotPassword(with email: String) {
-        guard !email.isEmpty else {
-            print("❌ Email can't be empty")
-            return
-        }
-
-        let credentials = AuthCredentials(email: email, password: "", reenteredPassword: nil)
-
-        Task {
-            do {
-                try await AuthService.shared.resetPassword(for: credentials)
-                await MainActor.run {
-                    print("✅ The reset link has been sent")
-                }
-            } catch {
-                await MainActor.run {
-                    print("❌ Password reset error: \(error.localizedDescription)")
-                }
-            }
-        }
+        coordinator?.showForgotPasswordScene()
     }
 
     func back() {

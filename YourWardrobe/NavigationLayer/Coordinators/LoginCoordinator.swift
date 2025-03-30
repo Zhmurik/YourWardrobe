@@ -42,5 +42,11 @@ extension LoginCoordinator {
         let vc = factory.makeSignUpScene(coordinator: self)
         navigationController.pushViewController(vc, animated: true)
     }
+    
+    func showForgotPasswordScene() {
+        guard let navigationController = navigationController else { return }
+        let vc = factory.makeForgotPasswordScene(coordinator: self)
+        navigationController.pushViewController(vc, animated: true)
+    }
 }
 

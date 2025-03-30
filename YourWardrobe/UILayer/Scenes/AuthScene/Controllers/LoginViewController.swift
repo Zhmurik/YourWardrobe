@@ -11,6 +11,7 @@ enum LoginViewState {
     case initial
     case signIn
     case signUp
+    case forgotPassword
 }
 
 protocol LoginViewInputProtocol: AnyObject {
@@ -36,9 +37,11 @@ class LoginViewController: UIViewController {
     private lazy var signUpPassword = WRTextField()
     private lazy var signUpReEnterPassword = WRTextField()
     private lazy var forgotLabel = UILabel()
+    private lazy var forgotPasswordEmail = WRTextField()
     private lazy var logoImage = UIImageView()
     private lazy var signInButton = WRButton()
     private lazy var signUpButton = WRButton()
+    private lazy var forgotPasswordButton = WRButton()
     private lazy var verticalStack = UIStackView()
     private lazy var loader = UIActivityIndicatorView(style: .large)
     private lazy var loaderContainer = UIView()
@@ -110,7 +113,14 @@ private extension LoginViewController {
             setupSignInButton()
             setupForgotLabel()
             setupNavigationBar()
+        case .forgotPassword:
+            setupBottomView()
+            setupStack()
+            setupTitleLabel()
+
         }
+
+        
         setupLoaderView()
     }
     
@@ -129,7 +139,7 @@ private extension LoginViewController {
         verticalStack.translatesAutoresizingMaskIntoConstraints = false
         verticalStack.axis = .vertical
         verticalStack.spacing = 20
-        
+
         switch state {
         case .initial:
             return
@@ -138,28 +148,45 @@ private extension LoginViewController {
             verticalStack.addArrangedSubview(signInPassword)
             
             bottomCTValue = -262
-            stackViewBottomCT = verticalStack.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: bottomCTValue)
-            
-            NSLayoutConstraint.activate([
-                verticalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                stackViewBottomCT
-            ])
-            
+
         case .signUp:
             verticalStack.addArrangedSubview(signUpUsername)
             verticalStack.addArrangedSubview(signUpPassword)
             verticalStack.addArrangedSubview(signUpReEnterPassword)
-            
+
             bottomCTValue = -227
-            stackViewBottomCT = verticalStack.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: bottomCTValue)
-            
-            NSLayoutConstraint.activate([
-                verticalStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                stackViewBottomCT
-            ])
+
+        case .forgotPassword:
+            forgotPasswordEmail.translatesAutoresizingMaskIntoConstraints = false
+            forgotPasswordEmail.placeholder = "Email"
+            forgotPasswordEmail.backgroundColor = AppColors.background
+            forgotPasswordEmail.layer.borderColor = AppColors.accentColor.cgColor
+            forgotPasswordEmail.layer.borderWidth = 0.5
+            forgotPasswordEmail.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+            forgotPasswordButton.setTitle("Continue")
+            forgotPasswordButton.scheme = .orange
+            forgotPasswordButton.action = { [weak self] in
+                self?.onForgotPasswordTapped()
+            }
+            forgotPasswordButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+            verticalStack.addArrangedSubview(forgotPasswordEmail)
+            verticalStack.addArrangedSubview(forgotPasswordButton)
+
+            bottomCTValue = -192
         }
-        
+
+        stackViewBottomCT = verticalStack.bottomAnchor.constraint(equalTo: bottomView.topAnchor, constant: bottomCTValue)
+
+        NSLayoutConstraint.activate([
+            verticalStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            verticalStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            stackViewBottomCT
+        ])
+
     }
+
     
     func setupBottomView() {
         view.addSubview(bottomView)
@@ -222,10 +249,13 @@ private extension LoginViewController {
             titleLabel.text = "Sign Up"
         case .initial:
             return
+        case .forgotPassword:
+            titleLabel.text = "RETRIEVE PASSWORD"
+            titleLabel.font = .Oswald.Bold.size(size: 18)
         }
         NSLayoutConstraint.activate([
-            titleLabel.bottomAnchor.constraint(equalTo: verticalStack.topAnchor, constant: -58),
-            titleLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+            titleLabel.bottomAnchor.constraint(equalTo: verticalStack.topAnchor, constant: -45),
+            titleLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 40),
             titleLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
             titleLabel.heightAnchor.constraint(equalToConstant: 50),
         ])
@@ -263,13 +293,14 @@ private extension LoginViewController {
                 signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
                 signInButton.heightAnchor.constraint(equalToConstant: 50)
             ])
-        case .signIn, .signUp:
+        case .signIn, .signUp, .forgotPassword:
             NSLayoutConstraint.activate([
                 signInButton.topAnchor.constraint(equalTo: verticalStack.bottomAnchor, constant: 40),
                 signInButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
                 signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
                 signInButton.heightAnchor.constraint(equalToConstant: 50)
             ])
+            
         }
     }
     
@@ -389,6 +420,9 @@ private extension LoginViewController {
              viewOutput.loginStart(with: credentials)
          case .signUp:
              return
+         case .forgotPassword:
+             let email = forgotPasswordEmail.text ?? ""
+             viewOutput.goToFogotPassword(with: email)
          }
      }
      
@@ -405,6 +439,8 @@ private extension LoginViewController {
              )
              let name = signInUsername.text ?? ""
              viewOutput.registrationStart(with: credentials, name: name)
+         case .forgotPassword:
+             return
          }
      }
      

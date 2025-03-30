@@ -129,6 +129,13 @@ struct SceneFactory {
         presenter.viewInput = controller
         return controller
     }
+    static func makeForgotPasswordScene(coordinator: LoginCoordinator) -> LoginViewController {
+        let presenter = LoginPresenter(coordinator: coordinator)
+        let controller = LoginViewController(viewOutput: presenter, state: .forgotPassword)
+        presenter.viewInput = controller
+        return controller
+    }
+    
     static func makeHomeScene(coordinator: HomeCoordinator) -> HomeViewController {
         //TODO: add presenter
         let controller = HomeViewController()
@@ -140,4 +147,5 @@ struct SceneFactory {
         let controller = WardrobeViewController(presenter: presenter)
         return controller
     }
+    
 }
