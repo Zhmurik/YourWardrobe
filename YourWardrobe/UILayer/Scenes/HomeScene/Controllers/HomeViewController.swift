@@ -7,8 +7,9 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
-    
+class HomeViewController: UIViewController, HomeViewProtocol {
+        
+    private var presenter: HomePresenter!
     
     // MARK: - UI Elements
     private let contentView = UIView()
@@ -16,6 +17,7 @@ class HomeViewController: UIViewController {
     
     private let profileIcon = UIImageView()
     private let userNameLabel = UILabel()
+    
     private let findLookLabel = UILabel()
     private let findYourLookToday = UIImageView()
     
@@ -38,8 +40,9 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
-        
+        presenter = HomePresenter(view: self)
         setupLayout()
+        presenter.loadUserName()
         view.layoutIfNeeded()
     }
 }
@@ -114,6 +117,11 @@ extension HomeViewController {
             userNameLabel.leftAnchor.constraint(equalTo: profileIcon.rightAnchor, constant: 30),
             userNameLabel.heightAnchor.constraint(equalToConstant: 16)
         ])
+    }
+    func showUserName(_ name: String) {
+        DispatchQueue.main.async {
+            self.userNameLabel.text = name
+        }
     }
     
     func setupFindYourLookLabel() {
