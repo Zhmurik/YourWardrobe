@@ -39,7 +39,6 @@ actor AuthService {
             "name": name,
             "email": credentials.email
         ]
-        
         try await db.collection("users").document(user.uid).setData(userData)
         
         return AuthUser(id: user.uid, name: name, email: credentials.email)

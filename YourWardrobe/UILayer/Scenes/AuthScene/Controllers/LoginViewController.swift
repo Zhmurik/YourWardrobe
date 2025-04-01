@@ -5,6 +5,13 @@
 //  Created by Anna Zhmurkova on 2/9/25.
 //
 
+//
+//  LoginViewController.swift
+//  YourWardrobe
+//
+//  Created by Anna Zhmurkova on 2/9/25.
+//
+
 import UIKit
 
 enum LoginViewState {
@@ -34,6 +41,7 @@ class LoginViewController: UIViewController {
     private lazy var signInUsername =  WRTextField()
     private lazy var signInPassword = WRTextField()
     private lazy var signUpUsername = WRTextField()
+    private lazy var signUpName = WRTextField()
     private lazy var signUpPassword = WRTextField()
     private lazy var signUpReEnterPassword = WRTextField()
     private lazy var forgotLabel = UILabel()
@@ -107,6 +115,7 @@ private extension LoginViewController {
             setupBottomView()
             setupStack()
             setupSignUpUsername()
+            setupSignUpName()
             setupSignUpPassword()
             setupSignUpReEnterPassword()
             setupTitleLabel()
@@ -151,6 +160,7 @@ private extension LoginViewController {
 
         case .signUp:
             verticalStack.addArrangedSubview(signUpUsername)
+            verticalStack.addArrangedSubview(signUpName)
             verticalStack.addArrangedSubview(signUpPassword)
             verticalStack.addArrangedSubview(signUpReEnterPassword)
 
@@ -356,7 +366,7 @@ private extension LoginViewController {
     
     func setupSignUpUsername() {
         signUpUsername.translatesAutoresizingMaskIntoConstraints = false
-        signUpUsername.placeholder = "Enter Username"
+        signUpUsername.placeholder = "Enter email"
         signUpUsername.backgroundColor = AppColors.background
         signUpUsername.layer.borderColor = AppColors.accentColor.cgColor
         signUpUsername.layer.borderWidth = 0.5
@@ -367,6 +377,20 @@ private extension LoginViewController {
             signUpUsername.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
+    func setupSignUpName() {
+        signUpName.translatesAutoresizingMaskIntoConstraints = false
+        signUpName.placeholder = "Full Name"
+        signUpName.backgroundColor = AppColors.background
+        signUpName.layer.borderColor = AppColors.accentColor.cgColor
+        signUpName.layer.borderWidth = 0.5
+
+        NSLayoutConstraint.activate([
+            signUpName.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30),
+            signUpName.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30),
+            signUpName.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
     
     func setupSignUpReEnterPassword() {
         signUpReEnterPassword.translatesAutoresizingMaskIntoConstraints = false
@@ -419,7 +443,12 @@ private extension LoginViewController {
              )
              viewOutput.loginStart(with: credentials)
          case .signUp:
-             return
+             let credentials = AuthCredentials(email: signUpUsername.text ?? "",
+                                               password: signUpPassword.text ?? "",
+                                               reenteredPassword: signUpReEnterPassword.text ?? ""
+             )
+             let name = signUpName.text ?? ""
+             viewOutput.registrationStart(with: credentials, name: name)
          case .forgotPassword:
              let email = forgotPasswordEmail.text ?? ""
              viewOutput.goToFogotPassword(with: email)
@@ -433,12 +462,13 @@ private extension LoginViewController {
          case .signIn:
              return
          case .signUp:
-             let credentials = AuthCredentials(email: signUpUsername.text ?? "",
-                                               password: signUpPassword.text ?? "",
-                                               reenteredPassword: signUpReEnterPassword.text ?? ""
-             )
-             let name = signInUsername.text ?? ""
-             viewOutput.registrationStart(with: credentials, name: name)
+             return
+//             let credentials = AuthCredentials(email: signUpUsername.text ?? "",
+//                                               password: signUpPassword.text ?? "",
+//                                               reenteredPassword: signUpReEnterPassword.text ?? ""
+//             )
+//             let name = signInUsername.text ?? ""
+//             viewOutput.registrationStart(with: credentials, name: name)
          case .forgotPassword:
              return
          }
@@ -515,4 +545,3 @@ private extension LoginViewController {
 //#Preview("LoginVC") {
 //    LoginViewController(viewOutput: LoginPresenter(), state: .signIn)
 //}
-
