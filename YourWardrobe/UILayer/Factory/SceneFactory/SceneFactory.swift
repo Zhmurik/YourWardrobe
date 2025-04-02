@@ -148,4 +148,7 @@ struct SceneFactory {
         return controller
     }
     
+    static func makeProfileScene(coordinator: ProfileCoordinator, user: AuthUser) -> ProfileViewController {
+        return ProfileViewController(user: user)
+    }
 }

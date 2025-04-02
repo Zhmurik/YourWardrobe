@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class AppCoordinator: Coordinator {
     
@@ -17,11 +18,13 @@ class AppCoordinator: Coordinator {
     override func start() {
         if userStorage.passedOnboarding {
             showAuthFlow()
-        } else {
-            showOnboardingFlow()
+            return
         }
-//        showMainFlow()
+        if Auth.auth().currentUser != nil {
+            showMainFlow()
+        }
     }
+//        showMainFlow()
     
     override func finish() {
         print("AppCoordinator finished")

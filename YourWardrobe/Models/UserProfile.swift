@@ -13,10 +13,10 @@ class AuthUser: Identifiable {
     let email: String
     let city: String?
 
-    init(id: String = UUID().uuidString, name: String, email: String) {
+    init(id: String = UUID().uuidString, name: String, email: String, city: String? = nil) {
         self.id = id
         self.name = name
         self.email = email
-        self.city = nil
+        self.city = city
     }
 }

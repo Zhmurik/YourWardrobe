@@ -50,7 +50,7 @@ extension LoginPresenter: LoginViewOutputProtocol {
                 let user = try await AuthService.shared.signIn(credentials: credentials)
                 await MainActor.run {
                     self.viewInput?.stopLoader()
-                    print("✅ Congratulations: \(user.name)")
+                    print("✅ Welcome: \(user.name)")
                     self.goToMainScreen()
                 }
             } catch {

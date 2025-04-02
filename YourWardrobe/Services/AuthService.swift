@@ -88,4 +88,49 @@ actor AuthService {
             "name": newName
         ])
     }
+    
+    // MARK: - Fetch Current User Profile
+    func fetchCurrentUserProfile() async throws -> AuthUser {
+        guard let user = auth.currentUser else {
+            throw AuthError.userDataNotFound
+        }
+
+        let snapshot = try await db.collection("users").document(user.uid).getDocument()
+
+        guard let data = snapshot.data(),
+              let name = data["name"] as? String,
+              let email = data["email"] as? String else {
+            throw AuthError.userDataNotFound
+        }
+
+        return AuthUser(id: user.uid, name: name, email: email, city: data["city"] as? String)
+    }
+    
+    // MARK: - Update User Profile Info
+    func updateUserProfile(userId: String, name: String, city: String?) async throws {
+        guard !name.isEmpty else {
+            throw AuthError.invalidInput
+        }
+
+        var updateData: [String: Any] = ["name": name]
+        if let city = city {
+            updateData["city"] = city
+        }
+
+        try await db.collection("users").document(userId).updateData(updateData)
+    }
+    
+    // MARK: - Change Password
+    func changePassword(to newPassword: String) async throws {
+        guard let user = auth.currentUser else {
+            throw AuthError.userDataNotFound
+        }
+        guard !newPassword.isEmpty else {
+            throw AuthError.invalidInput
+        }
+
+        try await user.updatePassword(to: newPassword)
+    }
+
+
 }
