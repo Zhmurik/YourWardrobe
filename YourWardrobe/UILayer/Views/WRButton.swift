@@ -64,7 +64,7 @@ class WRButton: UIView {
         print("Updating color scheme to: \(scheme)") 
         switch scheme {
         case .white:
-            button.backgroundColor = AppColors.background
+            button.backgroundColor = AppColors.testColor2
             button.setTitleColor(AppColors.textPrimary, for: .normal)
         case .orange:
             button.backgroundColor = AppColors.accentColor

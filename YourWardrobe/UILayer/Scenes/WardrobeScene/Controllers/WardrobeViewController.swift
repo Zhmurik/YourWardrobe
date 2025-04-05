@@ -77,7 +77,6 @@ extension WardrobeViewController {
         setupSubCategoryCollection()
         configureRecommendCollectionTitle()
         setupRecommendCollection()
-        // TODO: Only for mock data
         calculateContentSize()
     }
     func  setupView() {

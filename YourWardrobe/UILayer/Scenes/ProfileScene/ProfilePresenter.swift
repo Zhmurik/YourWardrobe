@@ -11,21 +11,22 @@ protocol ProfileViewProtocol: AnyObject {
     func displayUserData(name: String, city: String?)
     func showSuccessMessage()
     func showError(_ message: String)
+    func navigateToLogin()
 }
 
 class ProfilePresenter {
     private weak var view: ProfileViewProtocol?
-    private var user: AuthUser
+    private var user: UserProfileModel?
+    private let userProfileService = UserProfileService()
 
-    init(view: ProfileViewProtocol, user: AuthUser) {
+    init(view: ProfileViewProtocol) {
         self.view = view
-        self.user = user
     }
 
     func loadUserData() {
         Task {
             do {
-                let updatedUser = try await AuthService.shared.fetchCurrentUserProfile()
+                let updatedUser = try await userProfileService.fetchUserProfileAsync()
                 self.user = updatedUser
                 await MainActor.run {
                     self.view?.displayUserData(name: updatedUser.name, city: updatedUser.city)
@@ -41,9 +42,14 @@ class ProfilePresenter {
     func updateUser(name: String, city: String?) {
         Task {
             do {
-                try await AuthService.shared.updateUserProfile(userId: user.id, name: name, city: city)
+                var fields: [String: Any] = ["name": name]
+                if let city = city {
+                    fields["city"] = city
+                }
+                try await userProfileService.updateUserProfileFieldsAsync(fields)
                 await MainActor.run {
                     self.view?.showSuccessMessage()
+                    self.loadUserData()
                 }
             } catch {
                 await MainActor.run {
@@ -52,5 +58,19 @@ class ProfilePresenter {
             }
         }
     }
-}
 
+    func logout() {
+        Task {
+            do {
+                try await AuthService.shared.logout()
+                await MainActor.run {
+                    view?.navigateToLogin()
+                }
+            } catch {
+                await MainActor.run {
+                    view?.showError("Failed to log out")
+                }
+            }
+        }
+    }
+}

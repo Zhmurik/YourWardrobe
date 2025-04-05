@@ -28,16 +28,10 @@ extension ProfileCoordinator {
         guard let firebaseUser = await AuthService.shared.currentUser else {
             fatalError("No authenticated user")
         }
-
-        let user = AuthUser(
-            id: firebaseUser.uid,
-            name: firebaseUser.displayName ?? "",
-            email: firebaseUser.email ?? ""
-        )
         
         await MainActor.run {
             guard let navigationController = navigationController else { return }
-            let vc = factory.makeProfileScene(coordinator: self, user: user)
+            let vc = factory.makeProfileScene(coordinator: self)
             navigationController.pushViewController(vc, animated: true)
 
         }
