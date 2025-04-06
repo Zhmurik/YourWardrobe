@@ -8,10 +8,11 @@
 import Foundation
 
 protocol ProfileViewProtocol: AnyObject {
-    func displayUserData(name: String, city: String?)
+    func displayUserData(name: String, city: String?, gender: Gender)
     func showSuccessMessage()
     func showError(_ message: String)
     func navigateToLogin()
+    func showEmptyProfileEditor()
 }
 
 class ProfilePresenter {
@@ -28,9 +29,23 @@ class ProfilePresenter {
             do {
                 let updatedUser = try await userProfileService.fetchUserProfileAsync()
                 self.user = updatedUser
+
+                let isEmptyProfile = updatedUser.name.isEmpty &&
+                                     updatedUser.city == nil &&
+                                     updatedUser.gender == .notSpecified
+
                 await MainActor.run {
-                    self.view?.displayUserData(name: updatedUser.name, city: updatedUser.city)
+                    if isEmptyProfile {
+                        self.view?.showEmptyProfileEditor()
+                    } else {
+                        self.view?.displayUserData(
+                            name: updatedUser.name,
+                            city: updatedUser.city,
+                            gender: updatedUser.gender
+                        )
+                    }
                 }
+
             } catch {
                 await MainActor.run {
                     self.view?.showError("Failed to load user data")
@@ -39,10 +54,11 @@ class ProfilePresenter {
         }
     }
 
-    func updateUser(name: String, city: String?) {
+
+    func updateUser(name: String, city: String?, gender: Gender) {
         Task {
             do {
-                var fields: [String: Any] = ["name": name]
+                var fields: [String: Any] = ["name": name, "dender": gender.rawValue]
                 if let city = city {
                     fields["city"] = city
                 }

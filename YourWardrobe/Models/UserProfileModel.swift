@@ -7,14 +7,20 @@
 
 import Foundation
 
+enum Gender: String {
+    case male = "Male"
+    case female = "Female"
+    case notSpecified = "Not specified"
+}
+
 class UserProfileModel: Identifiable {
     let id: String
     let name: String
-    let gender: String
+    let gender: Gender
     let city: String?
     let avatarURL: URL?
 
-    init(id: String = UUID().uuidString, name: String, gender: String, city: String? = nil, avatarURL: URL? = nil) {
+    init(id: String = UUID().uuidString, name: String, gender: Gender, city: String? = nil, avatarURL: URL? = nil) {
         self.id = id
         self.name = name
         self.gender = gender
@@ -28,7 +34,7 @@ extension UserProfileModel {
         return [
             "id": id,
             "name": name,
-            "gender": gender,
+            "gender": gender.rawValue,
             "city": city ?? "",
             "avatarURL": avatarURL?.absoluteString ?? ""
         ]
@@ -38,7 +44,8 @@ extension UserProfileModel {
         guard
             let id = dictionary["id"] as? String,
             let name = dictionary["name"] as? String,
-            let gender = dictionary["gender"] as? String
+            let genderString = dictionary["gender"] as? String,
+            let gender = Gender(rawValue: genderString)
         else {
             return nil
         }

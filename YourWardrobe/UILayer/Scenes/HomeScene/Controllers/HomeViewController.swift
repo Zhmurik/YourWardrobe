@@ -9,7 +9,7 @@ import UIKit
 
 class HomeViewController: UIViewController, HomeViewProtocol {
         
-    private var presenter: HomePresenter!
+    var presenter: HomePresenter!
     
     // MARK: - UI Elements
     private let contentView = UIView()

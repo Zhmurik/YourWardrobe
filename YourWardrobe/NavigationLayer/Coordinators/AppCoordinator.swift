@@ -20,8 +20,11 @@ class AppCoordinator: Coordinator {
             showAuthFlow()
             return
         }
-        if Auth.auth().currentUser != nil {
+        if let user = Auth.auth().currentUser {
+            print("✅ Logged in as: \(user.email ?? "unknown")")
             showMainFlow()
+        } else {
+            showAuthFlow()
         }
     }
 //        showMainFlow()

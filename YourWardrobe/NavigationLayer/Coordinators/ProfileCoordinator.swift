@@ -28,6 +28,7 @@ extension ProfileCoordinator {
         guard let firebaseUser = await AuthService.shared.currentUser else {
             fatalError("No authenticated user")
         }
+        print("Authenticated user ID: \(firebaseUser.uid)")
         
         await MainActor.run {
             guard let navigationController = navigationController else { return }

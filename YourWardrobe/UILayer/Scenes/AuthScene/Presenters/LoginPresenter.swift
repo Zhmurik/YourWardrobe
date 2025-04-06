@@ -47,7 +47,7 @@ extension LoginPresenter: LoginViewOutputProtocol {
 
         Task {
             do {
-                let user = try await AuthService.shared.signIn(credentials: credentials)
+                _ = try await AuthService.shared.signIn(credentials: credentials)
                 await MainActor.run {
                     self.viewInput?.stopLoader()
                     print("✅ Welcome")
@@ -73,7 +73,7 @@ extension LoginPresenter: LoginViewOutputProtocol {
 
         Task {
             do {
-                let user = try await AuthService.shared.register(credentials: credentials)
+                _ = try await AuthService.shared.register(credentials: credentials)
                 await MainActor.run {
                     print("✅ Successfully registered")
                     viewInput?.stopLoader()

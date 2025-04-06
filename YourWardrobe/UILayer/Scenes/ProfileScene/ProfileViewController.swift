@@ -25,11 +25,19 @@ class ProfileViewController: UIViewController {
     private let avatarImage = UIImageView()
     private let usernameLabel = UILabel()
     private let cityLabel = UILabel()
+    private let genderLabel = UILabel()
     
     private let editProfileInfoTitle = UILabel()
     private let editAvatarImage = UIImageView()
     private let editUsernameTextField = WRTextField()
     private let editCityTextField = WRTextField()
+    private let editGender: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["Male", "Female", "I don't want to answer"])
+        control.selectedSegmentIndex = 2
+        control.translatesAutoresizingMaskIntoConstraints = false
+        return control
+    }()
+
     
     private let editButton = WRButton()
     private let saveButton = WRButton()
@@ -75,6 +83,7 @@ extension ProfileViewController {
             setupAvatarImage()
             setupProfileUsername()
             setupProfileCity()
+            setupProfileGender()
             setupEditButton()
             setupLogoutButton()
             
@@ -83,6 +92,7 @@ extension ProfileViewController {
             setupEditAvatarImage()
             setupEditUsername()
             setupEditCity()
+            setupEditGender()
             setupSaveButton()
             setupLogoutButton()
         }
@@ -115,7 +125,7 @@ extension ProfileViewController {
     func setupProfileUsername() {
         contentView.addSubview(usernameLabel)
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        usernameLabel.font = .systemFont(ofSize: 20, weight: .medium)
+        usernameLabel.font = UIFont.Oswald.Regular.size(size: 18)
         usernameLabel.textColor = AppColors.textPrimary
         usernameLabel.layer.borderColor = AppColors.testColor2.cgColor
         
@@ -130,12 +140,24 @@ extension ProfileViewController {
         contentView.addSubview(cityLabel)
         cityLabel.translatesAutoresizingMaskIntoConstraints = false
         cityLabel.textColor = AppColors.textPrimary
-        cityLabel.font = .systemFont(ofSize: 16)
+        cityLabel.font = UIFont.Oswald.Regular.size(size: 18)
         cityLabel.layer.borderColor = AppColors.testColor2.cgColor
         
         NSLayoutConstraint.activate([
             cityLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
             cityLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+        ])
+    }
+    func setupProfileGender() {
+        contentView.addSubview(genderLabel)
+        genderLabel.translatesAutoresizingMaskIntoConstraints = false
+        genderLabel.textColor = AppColors.textPrimary
+        genderLabel.font = UIFont.Oswald.Regular.size(size: 18)
+        genderLabel.layer.borderColor = AppColors.testColor2.cgColor
+        
+        NSLayoutConstraint.activate([
+            genderLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 8),
+            genderLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
     }
     
@@ -231,6 +253,19 @@ extension ProfileViewController {
         ])
     }
     
+    func setupEditGender() {
+        contentView.addSubview(editGender)
+        editGender.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            editGender.topAnchor.constraint(equalTo: editCityTextField.bottomAnchor, constant: 12),
+            editGender.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+            editGender.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+            editGender.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    
     func setupSaveButton() {
         contentView.addSubview(saveButton)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
@@ -257,8 +292,19 @@ extension ProfileViewController {
     }
         
     func saveTapped() {
+        let selectedGender: Gender
+        switch editGender.selectedSegmentIndex {
+        case 0:
+            selectedGender = .male
+        case 1:
+            selectedGender = .female
+        default:
+            selectedGender = .male
+        }
+        
         presenter.updateUser(name: editUsernameTextField.text ?? "",
-                                city: editCityTextField.text ?? "")
+                                city: editCityTextField.text ?? "",
+                                gender: selectedGender)
         currentState = .mainProfile
         reloadLayout()
     }
@@ -276,12 +322,24 @@ extension ProfileViewController {
 
 extension ProfileViewController: @preconcurrency ProfileViewProtocol {
 
-    func displayUserData(name: String, city: String?) {
+    func displayUserData(name: String, city: String?, gender: Gender) {
         usernameLabel.text = name
         cityLabel.text = city
         editUsernameTextField.text = name
         editCityTextField.text = city
+        
+        switch gender {
+          case .male: editGender.selectedSegmentIndex = 0
+          case .female: editGender.selectedSegmentIndex = 1
+          case .notSpecified: editGender.selectedSegmentIndex = 2
+          }
     }
+    
+    func showEmptyProfileEditor() {
+        currentState = .editProfile
+        reloadLayout()
+    }
+
 
     func showSuccessMessage() {
         let alert = UIAlertController(title: "Success", message: "Profile updated", preferredStyle: .alert)
