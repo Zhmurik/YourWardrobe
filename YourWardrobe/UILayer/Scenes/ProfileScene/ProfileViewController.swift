@@ -7,349 +7,286 @@
 
 import UIKit
 
-
 enum ProfileViewState {
-    case mainProfile
-    case editProfile
+    case view
+    case edit
 }
 
 class ProfileViewController: UIViewController {
 
-    private let contentView = UIView()
     var presenter: ProfilePresenter!
     private var user: UserProfileModel!
-    private var currentState: ProfileViewState = .mainProfile
-    
-    // MARK: - UI Elements
-    private let profileInfoTitle = UILabel()
-    private let avatarImage = UIImageView()
-    private let usernameLabel = UILabel()
+    private var currentState: ProfileViewState = .view
+
+    // UI Components
+    private let scrollView = UIScrollView()
+    private let stackView = UIStackView()
+
+    private let titleLabel = UILabel()
+    private let personalInfoHeader = UIStackView()
+    private let personalInfoLabel = UILabel()
+    private let editButton = UIButton(type: .system)
+
+    private let nameLabel = UILabel()
     private let cityLabel = UILabel()
     private let genderLabel = UILabel()
-    
-    private let editProfileInfoTitle = UILabel()
-    private let editAvatarImage = UIImageView()
-    private let editUsernameTextField = WRTextField()
-    private let editCityTextField = WRTextField()
-    private let editGender: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["Male", "Female", "I don't want to answer"])
-        control.selectedSegmentIndex = 2
-        control.translatesAutoresizingMaskIntoConstraints = false
-        return control
-    }()
 
-    
-    private let editButton = WRButton()
-    private let saveButton = WRButton()
-    private let logoutButton = WRButton()
-    
-//    private let verticalStack = UIStackView()
-    
-    
-    // MARK: - Initializer
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private let nameField = WRTextField()
+    private let cityField = WRTextField()
+    private let genderField = WRTextField()
 
-    // MARK: - Lifecycle
+    private let settingsLabel = UILabel()
+    private let notificationRow = UIStackView()
+    private let notificationsLabel = UILabel()
+    private let notificationsSwitch = UISwitch()
+
+    private let languageRow = UIStackView()
+    private let languageLabel = UILabel()
+    private let languageButton = UIButton(type: .system)
+
+    private let logoutButton = UIButton(type: .system)
+
+    private let genderPicker = UIPickerView()
+    private let genderOptions = ["Male", "Female", "Specify"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColors.background
-        view.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-
         presenter = ProfilePresenter(view: self)
         presenter.loadUserData()
-        setupLayout()
+        setupUI()
     }
-}
 
-extension ProfileViewController {
-    
-    private func setupLayout() {
-        switch currentState {
-        case .mainProfile:
-            setupProfileInfoTitle()
-            setupAvatarImage()
-            setupProfileUsername()
-            setupProfileCity()
-            setupProfileGender()
-            setupEditButton()
-            setupLogoutButton()
-            
-        case .editProfile:
-            setupEditInfoTitle()
-            setupEditAvatarImage()
-            setupEditUsername()
-            setupEditCity()
-            setupEditGender()
-            setupSaveButton()
-            setupLogoutButton()
-        }
+    private func setupUI() {
+        setupScrollView()
+        setupStackView()
+        setupHeader()
+        setupEditablePersonalInfo()
+        setupSettingsSection()
+        setupLogoutButton()
     }
-    
-    func setupProfileInfoTitle() {
-        contentView.addSubview(profileInfoTitle)
-        profileInfoTitle.translatesAutoresizingMaskIntoConstraints = false
-        profileInfoTitle.text = "Profile"
-        profileInfoTitle.font = UIFont.Oswald.Bold.size(size: 24)
-        
-        NSLayoutConstraint.activate([
-            profileInfoTitle.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-            profileInfoTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-        ])
-    }
-    func setupAvatarImage() {
-        contentView.addSubview(avatarImage)
-        avatarImage.translatesAutoresizingMaskIntoConstraints = false
-        avatarImage.image = UIImage(systemName: "person.circle")
-        
-        NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: profileInfoTitle.bottomAnchor, constant: 20),
-            avatarImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            avatarImage.widthAnchor.constraint(equalToConstant: 100),
-            avatarImage.heightAnchor.constraint(equalToConstant: 100),
-        ])
-    }
-    
-    func setupProfileUsername() {
-        contentView.addSubview(usernameLabel)
-        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        usernameLabel.font = UIFont.Oswald.Regular.size(size: 18)
-        usernameLabel.textColor = AppColors.textPrimary
-        usernameLabel.layer.borderColor = AppColors.testColor2.cgColor
-        
-        NSLayoutConstraint.activate([
-            usernameLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 16),
-            usernameLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        
-        ])
-    }
-    
-    func setupProfileCity() {
-        contentView.addSubview(cityLabel)
-        cityLabel.translatesAutoresizingMaskIntoConstraints = false
-        cityLabel.textColor = AppColors.textPrimary
-        cityLabel.font = UIFont.Oswald.Regular.size(size: 18)
-        cityLabel.layer.borderColor = AppColors.testColor2.cgColor
-        
-        NSLayoutConstraint.activate([
-            cityLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
-            cityLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        ])
-    }
-    func setupProfileGender() {
-        contentView.addSubview(genderLabel)
-        genderLabel.translatesAutoresizingMaskIntoConstraints = false
-        genderLabel.textColor = AppColors.textPrimary
-        genderLabel.font = UIFont.Oswald.Regular.size(size: 18)
-        genderLabel.layer.borderColor = AppColors.testColor2.cgColor
-        
-        NSLayoutConstraint.activate([
-            genderLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 8),
-            genderLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        ])
-    }
-    
-    func setupEditButton() {
-        contentView.addSubview(editButton)
-        editButton.translatesAutoresizingMaskIntoConstraints = false
-        editButton.setTitle("Edit")
-        editButton.scheme = .white
-        editButton.action =  { [weak self] in
-            self?.editTapped()
-        }
-        
-        NSLayoutConstraint.activate([
-            editButton.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 20),
-            editButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            editButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            editButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    func setupLogoutButton() {
-        contentView.addSubview(logoutButton)
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        logoutButton.setTitle("Logout")
-        logoutButton.scheme = .orange
-        logoutButton.action = { [weak self] in
-            self?.logoutTapped()
-        }
-        NSLayoutConstraint.activate([
-            logoutButton.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            logoutButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            logoutButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            logoutButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            logoutButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    func setupEditInfoTitle() {
-        contentView.addSubview(editProfileInfoTitle)
-        editProfileInfoTitle.translatesAutoresizingMaskIntoConstraints = false
-        editProfileInfoTitle.text = "Edit Profile"
-        editProfileInfoTitle.font = UIFont.Oswald.Bold.size(size: 24)
-        
-        NSLayoutConstraint.activate([
-            editProfileInfoTitle.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-            editProfileInfoTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-        ])
-    }
-    
-    func setupEditAvatarImage() {
-        contentView.addSubview(editAvatarImage)
-        editAvatarImage.translatesAutoresizingMaskIntoConstraints = false
-        editAvatarImage.image = UIImage(systemName: "person.circle")
-        
-        NSLayoutConstraint.activate([
-            editAvatarImage.topAnchor.constraint(equalTo: editProfileInfoTitle.bottomAnchor, constant: 20),
-            editAvatarImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            editAvatarImage.widthAnchor.constraint(equalToConstant: 100),
-            editAvatarImage.heightAnchor.constraint(equalToConstant: 100),
-        ])
-    }
-    
-    func setupEditUsername() {
-        contentView.addSubview(editUsernameTextField)
-        editUsernameTextField.translatesAutoresizingMaskIntoConstraints = false
-        editUsernameTextField.placeholder = "Username"
-        editUsernameTextField.backgroundColor = AppColors.background
-        editUsernameTextField.layer.borderColor = AppColors.testColor2.cgColor
-        editUsernameTextField.layer.borderWidth = 0.5
-        
-        NSLayoutConstraint.activate([
-            editUsernameTextField.topAnchor.constraint(equalTo: editAvatarImage.bottomAnchor, constant: 16),
-            editUsernameTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            editUsernameTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            editUsernameTextField.heightAnchor.constraint(equalToConstant: 40),
-        ])
-    }
-    
-    func setupEditCity() {
-        contentView.addSubview(editCityTextField)
-        editCityTextField.translatesAutoresizingMaskIntoConstraints = false
-        editCityTextField.placeholder = "City"
-        editCityTextField.backgroundColor = AppColors.background
-        editCityTextField.layer.borderColor = AppColors.testColor2.cgColor
-        editCityTextField.layer.borderWidth = 0.5
-        
-        NSLayoutConstraint.activate([
-            editCityTextField.topAnchor.constraint(equalTo: editUsernameTextField.bottomAnchor, constant: 12),
-            editCityTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            editCityTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            editCityTextField.heightAnchor.constraint(equalToConstant: 40)
-        ])
-    }
-    
-    func setupEditGender() {
-        contentView.addSubview(editGender)
-        editGender.translatesAutoresizingMaskIntoConstraints = false
 
+    private func setupScrollView() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            editGender.topAnchor.constraint(equalTo: editCityTextField.bottomAnchor, constant: 12),
-            editGender.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            editGender.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            editGender.heightAnchor.constraint(equalToConstant: 30)
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
-    
-    func setupSaveButton() {
-        contentView.addSubview(saveButton)
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.setTitle("Save")
-        saveButton.scheme = .white
-        saveButton.action = { [weak self] in
-            self?.saveTapped()
-        }
-            
-            NSLayoutConstraint.activate([
-                saveButton.topAnchor.constraint(equalTo: editCityTextField.bottomAnchor, constant: 20),
-                saveButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-                saveButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-                saveButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-                saveButton.widthAnchor.constraint(equalToConstant: 50),
-            ])
-        }
-        
-    // MARK: - Button Actions
-        
-    func editTapped() {
-        currentState = .editProfile
-        reloadLayout()
+    private func setupStackView() {
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
+        ])
     }
-        
-    func saveTapped() {
-        let selectedGender: Gender
-        switch editGender.selectedSegmentIndex {
-        case 0:
-            selectedGender = .male
-        case 1:
-            selectedGender = .female
-        default:
-            selectedGender = .male
-        }
-        
-        presenter.updateUser(name: editUsernameTextField.text ?? "",
-                                city: editCityTextField.text ?? "",
-                                gender: selectedGender)
-        currentState = .mainProfile
-        reloadLayout()
+
+    private func setupHeader() {
+        titleLabel.text = "Account Settings"
+        titleLabel.font = UIFont.Oswald.Bold.size(size: 28)
+        titleLabel.textColor = AppColors.textPrimary
+
+        editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
+        editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
+
+        let headerRow = UIStackView(arrangedSubviews: [titleLabel, editButton])
+        headerRow.axis = .horizontal
+        headerRow.distribution = .equalSpacing
+        stackView.addArrangedSubview(headerRow)
     }
-        
-    @objc func logoutTapped() {
+
+    private func setupEditablePersonalInfo() {
+        personalInfoLabel.text = "Personal Information"
+        personalInfoLabel.font = UIFont.Oswald.SemiBold.size(size: 18)
+        personalInfoLabel.textColor = AppColors.textPrimary
+
+        personalInfoHeader.axis = .horizontal
+        personalInfoHeader.distribution = .equalSpacing
+        personalInfoHeader.addArrangedSubview(personalInfoLabel)
+        stackView.addArrangedSubview(personalInfoHeader)
+
+        stackView.addArrangedSubview(nameLabel)
+        stackView.addArrangedSubview(cityLabel)
+        stackView.addArrangedSubview(genderLabel)
+
+        nameField.placeholder = "Enter name"
+        nameField.backgroundColor = .clear
+        nameField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        nameField.layer.borderColor = AppColors.accentColor.cgColor
+        nameField.layer.borderWidth = 0.5
+
+        cityField.placeholder = "Enter city"
+        cityField.backgroundColor = .clear
+        cityField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        cityField.layer.borderColor = AppColors.accentColor.cgColor
+        cityField.layer.borderWidth = 0.5
+
+        genderField.placeholder = "Select gender"
+        genderField.inputView = genderPicker
+        genderField.backgroundColor = .clear
+        genderField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        genderField.layer.borderColor = AppColors.accentColor.cgColor
+        genderField.layer.borderWidth = 0.5
+
+        genderPicker.delegate = self
+        genderPicker.dataSource = self
+
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissGenderPicker))
+        toolbar.setItems([doneButton], animated: true)
+        genderField.inputAccessoryView = toolbar
+    }
+
+    private func setupSettingsSection() {
+        settingsLabel.text = "Settings"
+        settingsLabel.font = UIFont.Oswald.SemiBold.size(size: 18)
+        settingsLabel.textColor = AppColors.textPrimary
+        stackView.addArrangedSubview(settingsLabel)
+
+        notificationsLabel.text = "Notifications"
+        notificationRow.axis = .horizontal
+        notificationRow.distribution = .equalSpacing
+        notificationRow.addArrangedSubview(notificationsLabel)
+        notificationRow.addArrangedSubview(notificationsSwitch)
+        stackView.addArrangedSubview(notificationRow)
+
+        languageLabel.text = "Language"
+        languageButton.setTitle("English ⌄", for: .normal)
+        languageButton.addTarget(self, action: #selector(selectLanguage), for: .touchUpInside)
+        languageRow.axis = .horizontal
+        languageRow.distribution = .equalSpacing
+        languageRow.addArrangedSubview(languageLabel)
+        languageRow.addArrangedSubview(languageButton)
+        stackView.addArrangedSubview(languageRow)
+    }
+
+    private func setupLogoutButton() {
+        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.setTitleColor(.white, for: .normal)
+        logoutButton.backgroundColor = AppColors.accentColor
+        logoutButton.layer.cornerRadius = 10
+        logoutButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        stackView.addArrangedSubview(logoutButton)
+    }
+
+    @objc private func editTapped() {
+        guard currentState == .view else { return }
+        currentState = .edit
+
+        nameLabel.removeFromSuperview()
+        cityLabel.removeFromSuperview()
+        genderLabel.removeFromSuperview()
+
+        nameField.text = user?.name
+        cityField.text = user?.city
+        genderField.text = genderOptions[genderPicker.selectedRow(inComponent: 0)] ?? "Specify"
+
+        stackView.insertArrangedSubview(nameField, at: 2)
+        stackView.insertArrangedSubview(cityField, at: 3)
+        stackView.insertArrangedSubview(genderField, at: 4)
+
+        editButton.setTitle("Save", for: .normal)
+        editButton.setImage(nil, for: .normal)
+        editButton.removeTarget(self, action: #selector(editTapped), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
+    }
+
+    @objc private func saveTapped() {
+        let name = nameField.text ?? ""
+        let city = cityField.text
+        let gender = selectedGenderFromPicker()
+
+        presenter.updateUser(name: name, city: city, gender: gender)
+
+        nameField.removeFromSuperview()
+        cityField.removeFromSuperview()
+        genderField.removeFromSuperview()
+
+        nameLabel.text = "Name: \(name)"
+        cityLabel.text = "City: \(city ?? "")"
+        genderLabel.text = "Gender: \(gender.rawValue.capitalized)"
+
+        stackView.insertArrangedSubview(nameLabel, at: 2)
+        stackView.insertArrangedSubview(cityLabel, at: 3)
+        stackView.insertArrangedSubview(genderLabel, at: 4)
+
+        editButton.setTitle(nil, for: .normal)
+        editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
+        editButton.removeTarget(self, action: #selector(saveTapped), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
+
+        currentState = .view
+    }
+
+    @objc private func dismissGenderPicker() {
+        genderField.resignFirstResponder()
+    }
+
+    @objc private func logoutTapped() {
         presenter.logout()
     }
 
-        
-    private func reloadLayout() {
-        contentView.subviews.forEach { $0.removeFromSuperview() }
-        setupLayout()
+    @objc private func selectLanguage() {
+        // implement language selection
+    }
+
+    private func selectedGenderFromPicker() -> Gender {
+        switch genderPicker.selectedRow(inComponent: 0) {
+        case 0: return .male
+        case 1: return .female
+        default: return .notSpecified
+        }
     }
 }
 
+// MARK: - Picker
+
+extension ProfileViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        genderOptions.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        genderOptions[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        genderField.text = genderOptions[row]
+    }
+}
+
+// MARK: - View Protocol
+
 extension ProfileViewController: @preconcurrency ProfileViewProtocol {
+    func showEmptyProfileEditor() {
+        currentState = .edit
+        editTapped()
+    }
 
     func displayUserData(name: String, city: String?, gender: Gender) {
-        usernameLabel.text = name
-        cityLabel.text = city
-        editUsernameTextField.text = name
-        editCityTextField.text = city
-        
-        switch gender {
-          case .male: editGender.selectedSegmentIndex = 0
-          case .female: editGender.selectedSegmentIndex = 1
-          case .notSpecified: editGender.selectedSegmentIndex = 2
-          }
-    }
-    
-    func showEmptyProfileEditor() {
-        currentState = .editProfile
-        reloadLayout()
-    }
+        user = UserProfileModel(name: name, gender: gender, city: city)
 
+        nameLabel.text = "Name: \(name)"
+        cityLabel.text = "City: \(city ?? "")"
+        genderLabel.text = "Gender: \(gender.rawValue.capitalized)"
+    }
 
     func showSuccessMessage() {
         let alert = UIAlertController(title: "Success", message: "Profile updated", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            self?.currentState = .mainProfile
-            self?.reloadLayout()
-        })
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-
 
     func showError(_ message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -360,7 +297,6 @@ extension ProfileViewController: @preconcurrency ProfileViewProtocol {
     @MainActor
     func navigateToLogin() {
         let loginVC = LoginViewController(viewOutput: LoginPresenter(), state: .signIn)
-
         if let presenter = loginVC.viewOutput as? LoginPresenter {
             presenter.viewInput = loginVC
         }
@@ -374,7 +310,4 @@ extension ProfileViewController: @preconcurrency ProfileViewProtocol {
             window.makeKeyAndVisible()
         }
     }
-
-
 }
-

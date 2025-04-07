@@ -18,7 +18,7 @@ class WRCollectionTitle: UIView {
         self.titleText = title
         super.init(frame: .zero)
         setupLayout()
-        collectionTitle.text = titleText  // Устанавливаем заголовок
+        collectionTitle.text = titleText 
     }
     
     required init?(coder: NSCoder) {

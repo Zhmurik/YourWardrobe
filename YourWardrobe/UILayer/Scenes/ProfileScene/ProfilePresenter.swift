@@ -58,7 +58,7 @@ class ProfilePresenter {
     func updateUser(name: String, city: String?, gender: Gender) {
         Task {
             do {
-                var fields: [String: Any] = ["name": name, "dender": gender.rawValue]
+                var fields: [String: Any] = ["name": name, "gender": gender.rawValue]
                 if let city = city {
                     fields["city"] = city
                 }

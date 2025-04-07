@@ -16,18 +16,19 @@ class AppCoordinator: Coordinator {
     var tabBarController: UITabBarController?
     
     override func start() {
-        if userStorage.passedOnboarding {
-            showAuthFlow()
-            return
-        }
-        if let user = Auth.auth().currentUser {
-            print("✅ Logged in as: \(user.email ?? "unknown")")
-            showMainFlow()
-        } else {
-            showAuthFlow()
-        }
+//        if userStorage.passedOnboarding {
+//            showAuthFlow()
+//            return
+//        }
+//        if let user = Auth.auth().currentUser {
+//            print("✅ Logged in as: \(user.email ?? "unknown")")
+//            showMainFlow()
+//        } else {
+//            showAuthFlow()
+//        }
+        showMainFlow()
     }
-//        showMainFlow()
+        
     
     override func finish() {
         print("AppCoordinator finished")
